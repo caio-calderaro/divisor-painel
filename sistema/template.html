@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Painel Divisor</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* fonte embutida no próprio arquivo (sem Google Fonts): o painel não depende de nenhum servidor */
+@font-face{font-family:"Plus Jakarta Sans";src:url(__FONT__) format("woff2");font-weight:200 800;font-style:normal;font-display:swap}
 :root{
   --bg:#f5f7f5; --surface:#ffffff; --surface-2:#f0f4f1; --ink:#0f1a14; --ink-2:#4a5a50; --ink-3:#7c8a82;
   --line:#e2e8e4; --brand:#2f7d4f; --brand-2:#3f9a63; --brand-soft:#e6f2ea; --brand-ink:#1f5a37;
@@ -90,7 +90,17 @@ select.week{appearance:none;background:var(--surface) url("data:image/svg+xml,%3
 /* drawer */
 .scrim{position:fixed;inset:0;background:rgba(5,12,8,.45);opacity:0;pointer-events:none;transition:.2s;z-index:40}
 .drawer{visibility:hidden;position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);z-index:50;transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility .28s;overflow-y:auto;box-shadow:-20px 0 60px -20px rgba(0,0,0,.35)}
-.open .scrim{opacity:1;pointer-events:auto}.open .drawer{transform:none;visibility:visible}
+.tg{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.tg:checked~.scrim{opacity:1;pointer-events:auto}.tg:checked~.drawer{transform:none;visibility:visible}
+.tg:focus-visible+.card{outline:2px solid var(--brand);outline-offset:2px}
+label.card,label.wk,label.x,label.chip{cursor:pointer}
+label.scrim{display:block}
+.wkr{position:absolute;opacity:0;pointer-events:none}
+.week{display:none}
+.chips{display:none;gap:8px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}
+.chip{flex:none;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:13px;color:var(--ink-2)}
+.cbtn{display:none}.js .cbtn{display:inline-flex}
+.copy code{user-select:all;-webkit-user-select:all}
 .dh{position:sticky;top:0;background:var(--bg);padding:20px 24px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;z-index:2}
 .dh h2{font-size:24px;letter-spacing:-.025em}
 .x{margin-left:auto;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;background:var(--surface)}
@@ -110,6 +120,7 @@ select.week{appearance:none;background:var(--surface) url("data:image/svg+xml,%3
 .subt{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:6px}
 .note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:10px 12px;margin-top:6px}
 .tw{display:grid;gap:18px}
+.timg{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:#fff}
 .copy{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 10px 10px 14px;margin-top:8px}
 .copy code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;font-weight:600;flex:1;overflow-wrap:anywhere}
 .cbtn{font-size:12px;font-weight:700;padding:7px 12px;border-radius:9px;background:var(--brand);color:#fff;white-space:nowrap}
@@ -125,138 +136,30 @@ select.week{appearance:none;background:var(--surface) url("data:image/svg+xml,%3
 .btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
 .all{display:flex;gap:10px}
 .disc{font-size:12px;color:var(--ink-3);text-align:center;padding:30px 0 10px}
-@media (max-width:900px){.layout{grid-template-columns:1fr}.side{display:none}.kpis{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:901px){select.week{display:none}}
+@media (max-width:900px){.layout{grid-template-columns:1fr;padding-top:16px}.side{display:none}.chips{display:flex}.kpis{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.top .pill{display:none}.kpi b{font-size:18px}body{overflow-x:hidden}.wrap{padding:0 16px}.hero{padding:24px 20px}.dh,.db{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}}
+/*__WEEK_CSS__*/
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap">
-  <div class="logo"><svg viewBox="0 0 32 32"><rect x="12" y="2" width="8" height="28" rx="2" fill="var(--brand)"/><rect x="2" y="12" width="28" height="8" rx="2" fill="var(--brand)"/><rect x="12" y="12" width="8" height="8" fill="var(--brand-ink)"/></svg>Divisor</div>
-  <span class="pill"><i></i>Relatório semanal</span>
-  <div class="sp"></div>
-  <select class="week" id="weekSel" aria-label="Escolher semana"></select>
-</div></header>
-
-<div class="wrap layout">
-  <aside class="side"><h4>Relatórios</h4><nav id="weeks"></nav></aside>
-  <main id="main"></main>
-</div>
-
-<div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" aria-modal="true" role="dialog"></aside>
-
+<!--__BODY__-->
 <script>
-const REPORTS = /*__DATA__*/[];
-const fmt = n => n==null ? '—' : n.toLocaleString('pt-BR',{maximumFractionDigits:0});
-const usd = n => n==null ? '—' : 'US$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function trend(v){ if(!v||!v.values) return {cls:'flat',txt:'—'}; const a=v.values[0], b=v.values[v.values.length-1];
-  if(a==null||b==null) return {cls:'flat',txt:'—'};
-  if(!a) return b>0?{cls:'up',txt:'▲ novo'}:{cls:'flat',txt:'—'};
-  const p=(b-a)/a*100; if(Math.abs(p)<5) return {cls:'flat',txt:'● estável'};
-  if(p>=300) return {cls:'up',txt:'▲ '+(b/a).toLocaleString('pt-BR',{maximumFractionDigits:0})+'x'};
-  return {cls:p>0?'up':'down',txt:(p>0?'▲ ':'▼ ')+Math.abs(p).toLocaleString('pt-BR',{maximumFractionDigits:0})+'%'}; }
-const last = v => v&&v.values ? v.values[v.values.length-1] : null;
-const labelDate = d => { const [dd,mm,yy]=d.split('/'); const M=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez']; return `${+dd} ${M[mm-1]} ${yy}`; };
-let cur = 0;
-const wk = d => { const [dd,mm,yy]=d.split('/'); return 's'+yy+mm+dd; };
-
-function renderWeeks(){
-  document.getElementById('weeks').innerHTML = REPORTS.map((r,i)=>`<button class="wk ${i===cur?'on':''}" data-i="${i}"><span class="d"></span>Semana ${labelDate(r.date)}${i===0?'<span class="new">NOVO</span>':''}</button>`).join('');
-  document.getElementById('weekSel').innerHTML = REPORTS.map((r,i)=>`<option value="${i}" ${i===cur?'selected':''}>Semana ${labelDate(r.date)}</option>`).join('');
-}
-function renderMain(){
-  const r = REPORTS[cur]; if(!r){document.getElementById('main').innerHTML='<p>Nenhum relatório ainda.</p>';return;}
-  const P = r.products, top = [...P].sort((a,b)=>(b.commission_usd||0)-(a.commission_usd||0))[0];
-  const growing = P.filter(p=>trend(p.visits).cls==='up').length;
-  const quick = P.filter(p=>/^1 clique$/i.test((p.aff_process||'').trim())).length;
-  const plats = [...new Set(P.map(p=>p.platform).filter(Boolean))];
-  document.getElementById('main').innerHTML = `
-  <section class="hero">
-    <div class="eyb">Relatório Divisor · ${labelDate(r.date)}</div>
-    <h1>${P.length} produtos validados para anunciar no Google esta semana</h1>
-    <p>Mercado EUA. Cada produto já vem com palavra-chave, CPA e STOP definidos. Escolha, afilie-se e suba a campanha.</p>
-    <div class="kpis">
-      <div class="kpi"><b>${usd(top.commission_usd)}</b><span>Maior comissão · ${esc(top.name)}</span></div>
-      <div class="kpi"><b>${growing} de ${P.length}</b><span>Com acessos em alta</span></div>
-      <div class="kpi"><b>${quick}</b><span>Afiliação em 1 clique</span></div>
-      <div class="kpi"><b>${plats.length}</b><span>${esc(plats.join(' · '))}</span></div>
-    </div>
-  </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid">${P.map((p,i)=>{const ts=trend(p.searches),tv=trend(p.visits);return `
-    <button class="card" data-p="${i}">
-      <div class="h"><div class="rank">${i+1}</div><div><h3>${esc(p.name)}${p.hidden?' <span class="lock">🔒 Exclusivo</span>':''}</h3><div class="plat">${esc(p.platform)} · ${esc(p.country||'')}</div></div>
-        <div class="comm"><b>${usd(p.commission_usd)}</b><span>comissão</span></div></div>
-      <div class="metrics">
-        <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>${fmt(last(p.searches))}</b><span class="tr ${ts.cls}">${ts.txt}</span></div></div>
-        <div class="m"><div class="l">Acessos no site</div><div class="v"><b>${fmt(last(p.visits))}</b><span class="tr ${tv.cls}">${tv.txt}</span></div></div>
-      </div>
-      <div class="foot"><span class="tag">${esc(p.aff_process||'')}</span><span class="go">Ver campanha →</span></div>
-    </button>`}).join('')}</div>
-  <p class="disc">Este relatório não garante resultados financeiros. Os resultados variam conforme a execução de cada aluno.</p>`;
-}
-function chart(v,months){ if(!v||!v.values) return ''; const mx=Math.max(...v.values.map(x=>x||0),1);
-  return `<div class="chart">${v.values.map((x,i)=>`<div class="bar"><b>${fmt(x)}</b><i style="height:${Math.max(4,(x||0)/mx*80)}%"></i><span>${esc(months[i]||'')}</span></div>`).join('')}</div>`; }
-function copyBox(txt,label){ return `<div class="copy"><code>${esc(txt)}</code><button class="cbtn" data-copy="${esc(txt)}">${label||'Copiar'}</button></div>`; }
-function openProduct(i){
-  const p = REPORTS[cur].products[i], m = p.months||[];
-  const steps = (p.aff_process||'').split('+').map(s=>s.trim()).filter(Boolean);
-  const sm = (p.stop||'').match(/^(.*?)\s*(?:\((.*)\)|[—–-]\s*(.*))$/); const stopVal = sm ? sm[1].trim() : (p.stop||''), stopWhy = sm ? (sm[2]||sm[3]||'').trim() : '';
-  const ts=trend(p.searches), tv=trend(p.visits);
-  const kw0 = (p.keywords&&p.keywords[0]&&p.keywords[0].term)||'';
-  const d = document.getElementById('drawer');
-  d.innerHTML = `
-  <div class="dh"><div class="rank">${i+1}</div><div><h2>${esc(p.name)}${p.hidden?' <span class="lock">🔒 Exclusivo</span>':''}</h2><div class="plat">${esc(p.platform)} · ${esc(p.country||'')} · ${usd(p.commission_usd)} por venda</div></div><button class="x" id="close" aria-label="Fechar">✕</button></div>
-  <div class="db">
-    <div class="blk"><h5><em>1</em>Identificação</h5>
-      <div class="rowk"><span>Plataforma</span><b>${esc(p.platform)}</b></div>
-      <div class="rowk"><span>Produto</span><b>${esc(p.name)}</b></div>
-      <div class="rowk"><span>País</span><b>${esc(p.country)}</b></div>
-      <div class="rowk"><span>Comissão</span><b style="color:var(--brand-ink)">${usd(p.commission_usd)}</b></div>
-      <div class="rowk"><span>Site do produtor</span><b><a href="${esc(p.site)}" target="_blank" rel="noopener">${esc((p.site||'').replace(/^https?:\/\//,'').replace(/\/$/,''))} ↗</a></b></div>
-    </div>
-    <div class="blk"><h5><em>2</em>Tráfego · últimos 3 meses</h5><div class="tw">
-      <div><div class="subt">Volume de buscas (palavra-chave)<span class="tr ${ts.cls}">${ts.txt}</span></div>${chart(p.searches,m)}${p.searches?.note?`<div class="note">${esc(p.searches.note)}</div>`:''}</div>
-      <div><div class="subt">Acessos ao site do produtor<span class="tr ${tv.cls}">${tv.txt}</span></div>${chart(p.visits,m)}${p.visits?.note?`<div class="note">${esc(p.visits.note)}</div>`:''}</div>
-      ${p.trends?`<div><div class="subt">Interesse no Google Trends (0–100)<span class="tr ${trend(p.trends).cls}">${trend(p.trends).txt}</span></div>${chart(p.trends,m)}${p.trends.note?`<div class="note">${esc(p.trends.note)}</div>`:''}</div>`:''}
-      ${kw0?`<a class="btn ghost" href="https://trends.google.com/trends/explore?date=today%203-m&geo=US&q=${encodeURIComponent(kw0)}" target="_blank" rel="noopener">Ver “${esc(kw0)}” no Google Trends (EUA, 90 dias) ↗</a>`:''}
-    </div></div>
-    <div class="blk"><h5><em>3</em>Palavra-chave</h5>
-      ${(p.keywords||[]).map(k=>`<div class="rowk"><span>Correspondência</span><b>${esc(k.match)}</b></div>${copyBox('['+k.term+']','Copiar')}`).join('')}
-    </div>
-    <div class="blk"><h5><em>4</em>Configuração da campanha</h5>
-      <div class="rowk"><span>Estratégia de lance</span><b>CPA desejado</b></div>
-      <div class="cpa"><b>${esc(p.cpa||'—')}</b></div>
-      ${(p.campaign_extra||[]).map(([k,v])=>`<div class="rowk"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}
-      <div class="stop"><span>⛔</span><div><b>STOP em ${esc(stopVal)}</b><br>${esc(stopWhy.charAt(0).toUpperCase()+stopWhy.slice(1))}</div></div>
-    </div>
-    <div class="blk"><h5><em>5</em>Afiliação</h5>
-      <div class="rowk"><span>Plataforma</span><b>${esc(p.aff_platform)}</b></div>
-      <div class="steps">${steps.map((s,j)=>`<div class="step"><i>${j+1}</i>${esc(s.charAt(0).toUpperCase()+s.slice(1))}</div>`).join('')}</div>
-      <div class="all"><a class="btn" href="${esc(p.aff_link)}" target="_blank" rel="noopener">Abrir site do produto ↗</a></div>
-    </div>
-    <button class="btn ghost cbtn-all" data-copy="${esc(`${p.name}\nPlataforma: ${p.platform}\nComissão: ${usd(p.commission_usd)}\nPalavra-chave: ${(p.keywords||[]).map(k=>'['+k.term+'] ('+k.match+')').join(', ')}\nCPA: ${p.cpa}\nSTOP: ${p.stop}\nAfiliação: ${p.aff_process} — ${p.aff_link}`)}">Copiar resumo da campanha</button>
-  </div>`;
-  document.body.classList.add('open'); d.scrollTop=0;
-  history.replaceState(null,'','#'+wk(REPORTS[cur].date)+'-'+(i+1));
-}
-function closeDrawer(){document.body.classList.remove('open');history.replaceState(null,'','#'+wk(REPORTS[cur].date));}
-function setWeek(i){cur=i;renderWeeks();renderMain();window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'','#'+wk(REPORTS[cur].date));}
-
-document.addEventListener('click',e=>{
-  const w=e.target.closest('.wk'); if(w) return setWeek(+w.dataset.i);
-  const c=e.target.closest('.card'); if(c) return openProduct(+c.dataset.p);
-  if(e.target.closest('#close')||e.target.id==='scrim') return closeDrawer();
-  const cp=e.target.closest('[data-copy]'); if(cp){ const t=cp.dataset.copy, old=cp.textContent;
-    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();})
-      .finally(()=>{cp.textContent='Copiado ✓';cp.classList.add('done');setTimeout(()=>{cp.textContent=old;cp.classList.remove('done')},1600)}); }
-});
-document.getElementById('weekSel').addEventListener('change',e=>setWeek(+e.target.value));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
-(function init(){ const m=location.hash.match(/^#(s\d{8})(?:-(\d+))?$/); const i=m?REPORTS.findIndex(r=>wk(r.date)===m[1]):-1;
-  cur = i>=0?i:0; renderWeeks(); renderMain(); if(i>=0&&m[2]&&REPORTS[cur].products[+m[2]-1]) openProduct(+m[2]-1); })();
+/* Só melhorias opcionais: o painel funciona inteiro sem JavaScript (semanas e detalhes abrem só com CSS). */
+(function(){try{
+  document.documentElement.classList.add('js');
+  document.addEventListener('change',function(e){var t=e.target;
+    if(t.classList&&t.classList.contains('tg')&&t.checked){[].forEach.call(document.querySelectorAll('.tg'),function(o){if(o!==t)o.checked=false});
+      var d=t.parentNode.querySelector('.drawer'); if(d) d.scrollTop=0;}
+    if(t.classList&&t.classList.contains('wkr')){[].forEach.call(document.querySelectorAll('.tg'),function(o){o.checked=false}); try{window.scrollTo(0,0)}catch(_){}}
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')[].forEach.call(document.querySelectorAll('.tg'),function(o){o.checked=false})});
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-copy]'); if(!b) return; e.preventDefault();
+    var txt=b.getAttribute('data-copy'), old=b.textContent;
+    function fb(){var a=document.createElement('textarea');a.value=txt;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove();}
+    function ok(){b.textContent='Copiado ✓';b.classList.add('done');setTimeout(function(){b.textContent=old;b.classList.remove('done')},1600);}
+    try{navigator.clipboard.writeText(txt).then(ok,function(){fb();ok()})}catch(_){fb();ok()}
+  });
+}catch(_){}})();
 </script>
 </body>
 </html>
