@@ -159,7 +159,7 @@ def render(reports):
     css = ''.join(f'#w{w}:checked~.layout .week{w}{{display:block}}'
                   f'#w{w}:checked~.layout .side .wk{w}{{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}}'
                   f'#w{w}:checked~.layout .side .wk{w} .d{{background:var(--brand)}}'
-                  f'#w{w}:checked~.layout .chips .wk{w}{{background:var(--brand);border-color:var(--brand);color:#fff}}'
+                  f'#w{w}:checked~.layout .chips .wk{w}{{background:var(--brand);border-color:var(--brand);color:#06210f}}'
                   f'#w{w}:focus-visible~.layout .wk{w}{{outline:2px solid var(--brand);outline-offset:2px}}\n'
                   for w in range(len(reports)))
     body = f'''{radios}

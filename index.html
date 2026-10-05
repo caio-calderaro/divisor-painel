@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -100,6 +100,7 @@ label.scrim{display:block}
 .chips{display:none;gap:8px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}
 .chip{flex:none;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:13px;color:var(--ink-2)}
 .cbtn{display:none}.js .cbtn{display:inline-flex}
+:root[data-theme="dark"] .cbtn:not(.ghost),:root[data-theme="dark"] .btn:not(.ghost),:root[data-theme="dark"] .new{color:#06210f}
 .copy code{user-select:all;-webkit-user-select:all}
 .dh{position:sticky;top:0;background:var(--bg);padding:20px 24px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;z-index:2}
 .dh h2{font-size:24px;letter-spacing:-.025em}
@@ -138,9 +139,9 @@ label.scrim{display:block}
 .disc{font-size:12px;color:var(--ink-3);text-align:center;padding:30px 0 10px}
 @media (max-width:900px){.layout{grid-template-columns:1fr;padding-top:16px}.side{display:none}.chips{display:flex}.kpis{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.top .pill{display:none}.kpi b{font-size:18px}body{overflow-x:hidden}.wrap{padding:0 16px}.hero{padding:24px 20px}.dh,.db{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}}
-#w0:checked~.layout .week0{display:block}#w0:checked~.layout .side .wk0{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w0:checked~.layout .side .wk0 .d{background:var(--brand)}#w0:checked~.layout .chips .wk0{background:var(--brand);border-color:var(--brand);color:#fff}#w0:focus-visible~.layout .wk0{outline:2px solid var(--brand);outline-offset:2px}
-#w1:checked~.layout .week1{display:block}#w1:checked~.layout .side .wk1{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w1:checked~.layout .side .wk1 .d{background:var(--brand)}#w1:checked~.layout .chips .wk1{background:var(--brand);border-color:var(--brand);color:#fff}#w1:focus-visible~.layout .wk1{outline:2px solid var(--brand);outline-offset:2px}
-#w2:checked~.layout .week2{display:block}#w2:checked~.layout .side .wk2{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w2:checked~.layout .side .wk2 .d{background:var(--brand)}#w2:checked~.layout .chips .wk2{background:var(--brand);border-color:var(--brand);color:#fff}#w2:focus-visible~.layout .wk2{outline:2px solid var(--brand);outline-offset:2px}
+#w0:checked~.layout .week0{display:block}#w0:checked~.layout .side .wk0{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w0:checked~.layout .side .wk0 .d{background:var(--brand)}#w0:checked~.layout .chips .wk0{background:var(--brand);border-color:var(--brand);color:#06210f}#w0:focus-visible~.layout .wk0{outline:2px solid var(--brand);outline-offset:2px}
+#w1:checked~.layout .week1{display:block}#w1:checked~.layout .side .wk1{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w1:checked~.layout .side .wk1 .d{background:var(--brand)}#w1:checked~.layout .chips .wk1{background:var(--brand);border-color:var(--brand);color:#06210f}#w1:focus-visible~.layout .wk1{outline:2px solid var(--brand);outline-offset:2px}
+#w2:checked~.layout .week2{display:block}#w2:checked~.layout .side .wk2{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w2:checked~.layout .side .wk2 .d{background:var(--brand)}#w2:checked~.layout .chips .wk2{background:var(--brand);border-color:var(--brand);color:#06210f}#w2:focus-visible~.layout .wk2{outline:2px solid var(--brand);outline-offset:2px}
 
 </style>
 </head>
