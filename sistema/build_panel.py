@@ -2,10 +2,7 @@
 Uso: python3 build_panel.py <pasta_com_relatorios> <saida.html> [--artifact]
 
 Além do <saida.html> (página completa, usada no GitHub Pages), grava na mesma pasta:
-  - hubla_embed.html          -> código para colar na Hubla: <iframe srcdoc="..."> com o painel inteiro dentro.
-  - hubla_embed_alternativo.html -> mesmo painel via <iframe src="data:text/html;base64,...">, caso a Hubla
-                                 remova o atributo srcdoc.
-Nenhum dos dois busca nada em servidor: fonte, dados e imagens do Google Trends vão embutidos no código.
+  - hubla_embed.html -> código para colar na Hubla (uma vez só): <iframe> apontando para o GitHub Pages.
 """
 import sys, os, glob, json, base64, re
 from datetime import datetime
@@ -35,16 +32,15 @@ if '--artifact' in sys.argv:
     html = re.sub(r'(?is)<!doctype html>|</?html[^>]*>|</?head>|<meta[^>]*>|</?body>', '', html).strip()
 open(out, 'w', encoding='utf-8').write(html)
 
-# ---- códigos de incorporação para a área de membros (Hubla) ----
+# ---- código de incorporação para a área de membros (Hubla) ----
+# A Hubla só aceita iframe apontando para um link público. O GitHub Pages publica o index.html
+# nesse link e a tarefa de segunda o atualiza, então o código abaixo é colado UMA vez e não muda.
+URL = 'https://caio-calderaro.github.io/divisor-painel/'
 STYLE = 'width:100%;height:88vh;min-height:680px;border:0;border-radius:16px;display:block'
 d = os.path.dirname(os.path.abspath(out))
-latest = reports[0]['date'] if reports else '—'
-head = f'<!-- Painel Divisor · relatório de {latest} · código gerado automaticamente; cole tudo na Hubla -->\n'
-srcdoc = html.replace('&', '&amp;').replace('"', '&quot;')
 open(os.path.join(d, 'hubla_embed.html'), 'w', encoding='utf-8').write(
-    head + f'<iframe title="Painel Divisor" style="{STYLE}" allow="clipboard-write" srcdoc="{srcdoc}"></iframe>\n')
-b64 = base64.b64encode(html.encode('utf-8')).decode()
-open(os.path.join(d, 'hubla_embed_alternativo.html'), 'w', encoding='utf-8').write(
-    head + f'<iframe title="Painel Divisor" style="{STYLE}" allow="clipboard-write" src="data:text/html;charset=utf-8;base64,{b64}"></iframe>\n')
+    f'<iframe title="Painel Divisor" src="{URL}" style="{STYLE}" allow="clipboard-write" loading="lazy"></iframe>\n')
+alt = os.path.join(d, 'hubla_embed_alternativo.html')
+if os.path.exists(alt): os.remove(alt)
 
-print(f'{len(reports)} relatório(s) -> {out} (+ hubla_embed.html, hubla_embed_alternativo.html)')
+print(f'{len(reports)} relatório(s) -> {out} (+ hubla_embed.html)')

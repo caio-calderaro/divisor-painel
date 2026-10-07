@@ -7,18 +7,18 @@ a partir dos relatórios na pasta "Relatório" do Google Drive. Não edite os `.
 
 ## Colocar na área de membros (Hubla)
 
-Abra `hubla_embed.html`, copie **todo** o conteúdo e cole no bloco de código/HTML da aula.
-É um `<iframe srcdoc="...">` com o painel inteiro dentro: não busca nada em servidor nenhum
-(fonte, dados e gráficos do Google Trends vão embutidos).
+Cole o conteúdo de `hubla_embed.html` no bloco de iframe/código da aula, uma vez só:
 
-- Funciona mesmo se a Hubla bloquear JavaScript no iframe: semanas e detalhes dos produtos abrem só com CSS.
-  Sem JavaScript, só os botões "Copiar" somem (a palavra-chave continua selecionável).
-- Se a Hubla remover o atributo `srcdoc`, use `hubla_embed_alternativo.html` (mesmo painel via `data:`).
-- O código é uma "foto" do painel: quando sair relatório novo, cole o código novo.
+```html
+<iframe title="Painel Divisor" src="https://caio-calderaro.github.io/divisor-painel/" style="width:100%;height:88vh;min-height:680px;border:0;border-radius:16px;display:block" allow="clipboard-write" loading="lazy"></iframe>
+```
+
+A Hubla só aceita iframe com link público (confirmado pelo suporte deles). Esse link é o GitHub Pages,
+que a tarefa de segunda atualiza; o iframe mostra sempre a versão mais nova, sem colar de novo.
 
 ## Sistema
 
 - `sistema/parse_divisor.py` lê cada relatório (Word ou Google Docs exportado), nos dois formatos de tabela já usados
 - `sistema/render.py` monta o HTML estático do painel
-- `sistema/build_panel.py` junta todas as semanas e gera `index.html`, `hubla_embed.html` e `hubla_embed_alternativo.html`
+- `sistema/build_panel.py` junta todas as semanas e gera `index.html` e `hubla_embed.html`
 - `sistema/template.html` é o visual; `sistema/fonte/` é a fonte Plus Jakarta Sans (licença OFL)
