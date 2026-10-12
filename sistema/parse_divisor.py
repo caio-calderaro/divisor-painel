@@ -87,6 +87,9 @@ def parse(path):
             continue
         if cur is None: continue
         r = rows(b); head = (r[0][0] if r and r[0] else '').upper()
+        if len(r) == 1 and len(r[0]) == 1 and 'PRODUTO OCULTO' in head:
+            # aviso "🔒 PRODUTO OCULTO — Afiliação somente via..." (não confundir com a seção AFILIAÇÃO)
+            cur['hidden'] = True; continue
         if len(r) == 1 and len(r[0]) == 1:
             for key, sec in (('IDENTIFICA', 'IDENTIFICA'), ('TRÁFEGO', 'traffic'), ('TRAFEGO', 'traffic'),
                              ('PALAVRA', 'kw'), ('CAMPANHA', 'CAMPANHA'), ('AFILIA', 'AFILIA')):
