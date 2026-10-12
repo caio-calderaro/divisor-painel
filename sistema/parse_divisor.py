@@ -76,17 +76,42 @@ def parse(path):
             m2 = re.search(r'(\d{2}/\d{2}/\d{4})', tx)
             if m2 and not report["date"]: report["date"] = m2.group(1)
             m3 = re.fullmatch(r'-{2,}\s*(.+?)\s*-{2,}', tx)
-            if m3:
-                cur = {"name": m3.group(1)}; report["products"].append(cur)
+            m4 = re.fullmatch(r'\d{1,2}\.\s+(.+?)', tx) if not m3 else None
+            if m3 or m4:
+                name = (m3 or m4).group(1)
+                hidden = '🔒' in name or 'OCULTO' in name.upper()
+                name = re.split(r'\s*🔒', name)[0].strip()
+                cur = {"name": name}; report["products"].append(cur)
+                if hidden: cur['hidden'] = True
+                pending = None
             continue
         if cur is None: continue
         r = rows(b); head = (r[0][0] if r and r[0] else '').upper()
-        if len(r) == 1 and ('TRÁFEGO' in head or 'TRAFEGO' in head or 'PALAVRA' in head):
-            pending = 'traffic' if 'PALAVRA' not in head else 'kw'; continue
+        if len(r) == 1 and len(r[0]) == 1:
+            for key, sec in (('IDENTIFICA', 'IDENTIFICA'), ('TRÁFEGO', 'traffic'), ('TRAFEGO', 'traffic'),
+                             ('PALAVRA', 'kw'), ('CAMPANHA', 'CAMPANHA'), ('AFILIA', 'AFILIA')):
+                if key in head and 'GOOGLE TRENDS' not in head:
+                    pending = sec; break
+            else:
+                if 'PRODUTO OCULTO' in head: cur['hidden'] = True
+                elif 'GOOGLE TRENDS' in head: pending = 'trends_img'
+            continue
         if 'GOOGLE TRENDS' in head and len(r) == 1:
             pending = 'trends_img'; continue
+        if pending == 'traffic' and r and r[0] and r[0][0].lower().startswith('volume'):
+            # formato de 09/10: uma tabela por métrica (rótulo + meses / "Volume" / "Observação: ...")
+            lab = r[0][0].lower(); key = 'trends' if 'trends' in lab else 'searches' if 'busca' in lab else 'visits' if 'acesso' in lab else None
+            vrow = next((x for x in r[1:] if x and x[0].strip().lower() == 'volume'), None)
+            nrow = next((x for x in r[1:] if x and x[0].lower().startswith('observa')), None)
+            if key and vrow:
+                months = r[0][1:4]
+                note = re.sub(r'^observa[çc][ãa]o:\s*', '', nrow[0], flags=re.I) if nrow else ''
+                cur[key] = {"values": [num(v) for v in vrow[1:4]], "note": note, "months": months}
+                cur.setdefault('months', months)
+            continue  # a próxima tabela pode ser a outra métrica
         if pending == 'traffic' and head.startswith('MÉTRICA'): head = 'TRÁFEGO'
         elif pending == 'kw' and head.startswith('PALAVRA'): head = 'PALAVRA'
+        elif pending in ('IDENTIFICA', 'CAMPANHA', 'AFILIA'): head = pending
         pending = None
         if 'PRODUTO OCULTO' in head:
             cur['hidden'] = True
