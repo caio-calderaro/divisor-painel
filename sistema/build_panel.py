@@ -17,8 +17,17 @@ for f in glob.glob(os.path.join(src, '*.docx')) + glob.glob(os.path.join(src, '*
     r = parse(f)
     if r['products'] and r['date']:
         reports.append(r)
-# um relatório por data (o último arquivo com a mesma data vence), mais novo primeiro
-by_date = {r['date']: r for r in reports}
+# O painel mostra cada relatório pela SEGUNDA-FEIRA em que ele é entregue (a mais próxima da data
+# escrita no Word): o relatório feito na sexta 09/10 aparece como "12 out". A data original fica em
+# report_date. Se dois relatórios caírem na mesma segunda, vale o mais recente.
+from datetime import timedelta
+def monday(d):
+    dt = datetime.strptime(d, '%d/%m/%Y'); wd = dt.weekday()  # 0 = segunda
+    return dt - timedelta(days=wd) if wd <= 3 else dt + timedelta(days=7 - wd)
+by_date = {}
+for r in sorted(reports, key=lambda r: datetime.strptime(r['date'], '%d/%m/%Y')):
+    r['report_date'] = r['date']; r['date'] = monday(r['date']).strftime('%d/%m/%Y')
+    by_date[r['date']] = r
 reports = sorted(by_date.values(), key=lambda r: datetime.strptime(r['date'], '%d/%m/%Y'), reverse=True)
 
 tpl = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
