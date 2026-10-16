@@ -29,6 +29,8 @@ for r in sorted(reports, key=lambda r: datetime.strptime(r['date'], '%d/%m/%Y'))
     r['report_date'] = r['date']; r['date'] = monday(r['date']).strftime('%d/%m/%Y')
     by_date[r['date']] = r
 reports = sorted(by_date.values(), key=lambda r: datetime.strptime(r['date'], '%d/%m/%Y'), reverse=True)
+# numeração sequencial dos relatórios: o mais antigo é o nº 1
+for i, r in enumerate(reports): r['num'] = len(reports) - i
 
 tpl = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
 font = base64.b64encode(open(os.path.join(HERE, 'fonte', 'plus-jakarta-sans-latin.woff2'), 'rb').read()).decode()

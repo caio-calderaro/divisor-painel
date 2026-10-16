@@ -126,7 +126,7 @@ def week_section(r, w):
 {drawer(p, i, pid)}</div>''')
     return f'''<section class="week week{w}">
   <section class="hero">
-    <div class="eyb">Relatório Divisor · {label_date(r['date'])}</div>
+    <div class="eyb">Relatório Divisor nº {r.get('num', '')} · Semana {label_date(r['date'])}</div>
     <h1>{len(P)} produtos validados para anunciar no Google esta semana</h1>
     <p>Mercado EUA. Cada produto já vem com palavra-chave, CPA e STOP definidos. Escolha, afilie-se e suba a campanha.</p>
     <div class="kpis">
@@ -148,12 +148,12 @@ def render(reports):
     """Devolve (css_das_semanas, corpo_html)."""
     if not reports:
         return '', '<div class="wrap"><p style="padding:40px 0">Nenhum relatório ainda.</p></div>'
-    radios = ''.join(f'<input type="radio" name="wk" class="wkr" id="w{w}"{" checked" if w == 0 else ""} aria-label="Semana {label_date(r["date"])}">'
+    radios = ''.join(f'<input type="radio" name="wk" class="wkr" id="w{w}"{" checked" if w == 0 else ""} aria-label="Relatório nº {r.get("num", "")}, semana {label_date(r["date"])}">'
                      for w, r in enumerate(reports))
     new = '<span class="new">NOVO</span>'
-    side = ''.join(f'<label for="w{w}" class="wk wk{w}"><span class="d"></span>Semana {label_date(r["date"])}{new if w == 0 else ""}</label>'
+    side = ''.join(f'<label for="w{w}" class="wk wk{w}"><span class="d"></span><span class="n">nº {r.get("num", "")}</span>Semana {label_date(r["date"])}{new if w == 0 else ""}</label>'
                    for w, r in enumerate(reports))
-    chips = ''.join(f'<label for="w{w}" class="chip wk{w}">{label_date(r["date"])}{" · novo" if w == 0 else ""}</label>'
+    chips = ''.join(f'<label for="w{w}" class="chip wk{w}">nº {r.get("num", "")} · {label_date(r["date"])}{" · novo" if w == 0 else ""}</label>'
                     for w, r in enumerate(reports))
     weeks = ''.join(week_section(r, w) for w, r in enumerate(reports))
     css = ''.join(f'#w{w}:checked~.layout .week{w}{{display:block}}'
