@@ -5,6 +5,23 @@ import re
 from html import escape as _e
 from urllib.parse import quote
 
+# Textos de cada painel: o Divisor (semanal) e o Divisor PRO (quinzenal, Pós-Formação).
+VARIANTS = {
+    'divisor': dict(
+        eyb='Relatório Divisor nº {num} · Semana {date}',
+        h1='{n} produtos validados para anunciar no Google esta semana',
+        lead='Mercado EUA. Cada produto já vem com palavra-chave, CPA e STOP definidos. Escolha, afilie-se e suba a campanha.',
+        sec='Produtos da semana', per='Semana', per_l='semana', per_pl='Semanas',
+        logo='Divisor', pill='Relatório semanal', on_brand='#06210f'),
+    'pro': dict(
+        eyb='Divisor PRO nº {num} · Quinzena de {date}',
+        h1='{n} produtos validados para anunciar no Google nesta quinzena',
+        lead='Seleção exclusiva da Pós-Formação. Mercado EUA, com palavra-chave, CPA e STOP definidos em cada produto. Escolha, afilie-se e suba a campanha.',
+        sec='Produtos da quinzena', per='Quinzena', per_l='quinzena', per_pl='Quinzenas',
+        logo='Divisor<em class="pro">PRO</em>', pill='Relatório quinzenal · Pós-Formação', on_brand='#1a1206'),
+}
+V = VARIANTS['divisor']
+
 MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
 
 def esc(s): return _e('' if s is None else str(s), quote=True)
@@ -126,9 +143,9 @@ def week_section(r, w):
 {drawer(p, i, pid)}</div>''')
     return f'''<section class="week week{w}">
   <section class="hero">
-    <div class="eyb">Relatório Divisor nº {r.get('num', '')} · Semana {label_date(r['date'])}</div>
-    <h1>{len(P)} produtos validados para anunciar no Google esta semana</h1>
-    <p>Mercado EUA. Cada produto já vem com palavra-chave, CPA e STOP definidos. Escolha, afilie-se e suba a campanha.</p>
+    <div class="eyb">{V['eyb'].format(num=r.get('num', ''), date=label_date(r['date']))}</div>
+    <h1>{V['h1'].format(n=len(P))}</h1>
+    <p>{V['lead']}</p>
     <div class="kpis">
       <div class="kpi"><b>{usd(top.get('commission_usd'))}</b><span>Maior comissão · {esc(top.get('name'))}</span></div>
       <div class="kpi"><b>{growing} de {len(P)}</b><span>Com acessos em alta</span></div>
@@ -136,7 +153,7 @@ def week_section(r, w):
       <div class="kpi"><b>{len(plats)}</b><span>{esc(' · '.join(plats))}</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
+  <div class="sec-t"><h2>{V['sec']}</h2><span>Toque em um produto para ver a campanha completa</span></div>
   <div class="grid">{''.join(cards)}</div>
   <p class="disc">Este relatório não garante resultados financeiros. Os resultados variam conforme a execução de cada aluno.</p>
 </section>'''
@@ -144,14 +161,16 @@ def week_section(r, w):
 LOGO = ('<svg viewBox="0 0 32 32"><rect x="12" y="2" width="8" height="28" rx="2" fill="var(--brand)"/>'
         '<rect x="2" y="12" width="28" height="8" rx="2" fill="var(--brand)"/><rect x="12" y="12" width="8" height="8" fill="var(--brand-ink)"/></svg>')
 
-def render(reports):
+def render(reports, variant='divisor'):
     """Devolve (css_das_semanas, corpo_html)."""
+    global V
+    V = VARIANTS[variant]
     if not reports:
         return '', '<div class="wrap"><p style="padding:40px 0">Nenhum relatório ainda.</p></div>'
-    radios = ''.join(f'<input type="radio" name="wk" class="wkr" id="w{w}"{" checked" if w == 0 else ""} aria-label="Relatório nº {r.get("num", "")}, semana {label_date(r["date"])}">'
+    radios = ''.join(f'<input type="radio" name="wk" class="wkr" id="w{w}"{" checked" if w == 0 else ""} aria-label="Relatório nº {r.get("num", "")}, {V["per_l"]} {label_date(r["date"])}">'
                      for w, r in enumerate(reports))
     new = '<span class="new">NOVO</span>'
-    side = ''.join(f'<label for="w{w}" class="wk wk{w}"><span class="d"></span><span class="n">nº {r.get("num", "")}</span>Semana {label_date(r["date"])}{new if w == 0 else ""}</label>'
+    side = ''.join(f'<label for="w{w}" class="wk wk{w}"><span class="d"></span><span class="n">nº {r.get("num", "")}</span>{V["per"]} {label_date(r["date"])}{new if w == 0 else ""}</label>'
                    for w, r in enumerate(reports))
     chips = ''.join(f'<label for="w{w}" class="chip wk{w}">nº {r.get("num", "")} · {label_date(r["date"])}{" · novo" if w == 0 else ""}</label>'
                     for w, r in enumerate(reports))
@@ -159,17 +178,17 @@ def render(reports):
     css = ''.join(f'#w{w}:checked~.layout .week{w}{{display:block}}'
                   f'#w{w}:checked~.layout .side .wk{w}{{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}}'
                   f'#w{w}:checked~.layout .side .wk{w} .d{{background:var(--brand)}}'
-                  f'#w{w}:checked~.layout .chips .wk{w}{{background:var(--brand);border-color:var(--brand);color:#06210f}}'
+                  f'#w{w}:checked~.layout .chips .wk{w}{{background:var(--brand);border-color:var(--brand);color:{V["on_brand"]}}}'
                   f'#w{w}:focus-visible~.layout .wk{w}{{outline:2px solid var(--brand);outline-offset:2px}}\n'
                   for w in range(len(reports)))
     body = f'''{radios}
 <header class="top"><div class="wrap">
-  <div class="logo">{LOGO}Divisor</div>
-  <span class="pill"><i></i>Relatório semanal</span>
+  <div class="logo">{LOGO}{V['logo']}</div>
+  <span class="pill"><i></i>{V['pill']}</span>
   <div class="sp"></div>
 </div></header>
 <div class="wrap layout">
   <aside class="side"><h4>Relatórios</h4><nav>{side}</nav></aside>
-  <main><nav class="chips" aria-label="Semanas">{chips}</nav>{weeks}</main>
+  <main><nav class="chips" aria-label="{V['per_pl']}">{chips}</nav>{weeks}</main>
 </div>'''
     return css, body
