@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Semente Diária</title>
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: app de uma coluna para celular — tela "Hoje" como ritual da manhã à noite, abas fixas embaixo */
+:root{
+  --bg:#10140f;--panel:#181e16;--line:#2a3326;--fg:#ecead9;--muted:#9ba292;
+  --seed:#e2ab3d;--seed-ink:#1b1407;--ok:#86c792;--no:#dc7d62;
+  --display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --body:'Instrument Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:dark
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f1eee3;--panel:#fbfaf3;--line:#d8d3c1;--fg:#1a1e15;--muted:#5d6455;--seed:#a1650a;--seed-ink:#fffaf0;--ok:#2d7a3e;--no:#b04a31;color-scheme:light}}
+:root[data-theme="light"]{--bg:#f1eee3;--panel:#fbfaf3;--line:#d8d3c1;--fg:#1a1e15;--muted:#5d6455;--seed:#a1650a;--seed-ink:#fffaf0;--ok:#2d7a3e;--no:#b04a31;color-scheme:light}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body)}
+.tabs[hidden]{display:none}
+.app{max-width:480px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px calc(96px + env(safe-area-inset-bottom,0px));display:grid;gap:18px}
+h1,h2,.big{font-family:var(--display);text-transform:uppercase;letter-spacing:.01em;margin:0;text-wrap:balance}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--seed)}
+.muted{color:var(--muted)}
+.top{display:flex;justify-content:space-between;align-items:end;gap:12px}
+.top h1{font-size:64px;line-height:.9;font-weight:800}
+.top .of{font:500 13px var(--mono);color:var(--muted);text-align:right}
+.track{display:grid;grid-template-columns:repeat(30,1fr);gap:3px}
+.track i{height:6px;border-radius:2px;background:var(--line)}
+.track i.on{background:var(--seed)}.track i.miss{background:var(--no);opacity:.7}.track i.now{outline:1.5px solid var(--seed);outline-offset:1px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px}
+.card h2{font-size:30px;line-height:1;font-weight:800}
+.step{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.step .when{font:500 12px var(--mono);color:var(--muted)}
+.pl{display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;align-items:center}
+.play{width:56px;height:56px;border-radius:50%;border:0;background:var(--seed);color:var(--seed-ink);cursor:pointer;display:grid;place-items:center}
+.play.sm{width:44px;height:44px}
+.pl:has(.play.sm){grid-template-columns:44px minmax(0,1fr)}
+.play svg{width:22px;height:22px;fill:currentColor}
+.meta{display:grid;gap:6px;min-width:0}
+.bar{position:relative;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar b{position:absolute;inset:0 auto 0 0;width:0;background:var(--seed)}
+.time{display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.short{justify-self:start;background:none;border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:7px 14px;font:500 14px var(--body);cursor:pointer}
+.short[aria-pressed="true"]{border-color:var(--seed);color:var(--seed)}
+.idea{font-size:19px;line-height:1.45;margin:0;padding-left:14px;border-left:3px solid var(--seed)}
+.gesto{font-size:18px;line-height:1.45;margin:0}
+.btn{border:0;border-radius:10px;padding:13px 16px;font:600 16px var(--body);cursor:pointer;background:var(--fg);color:var(--bg);width:100%}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--fg)}
+.btn:disabled{opacity:.45;cursor:default}
+.done{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ok)}
+.done::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice button{padding:13px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--fg);font:600 16px var(--body);cursor:pointer}
+.choice button[aria-pressed="true"].y{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.choice button[aria-pressed="true"].n{background:var(--no);border-color:var(--no);color:var(--bg)}
+label{font-weight:600}
+textarea{width:100%;box-sizing:border-box;min-height:76px;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:16px/1.4 var(--body);resize:vertical}
+button:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--seed);outline-offset:2px}
+.moments{display:grid;gap:10px}
+.mo{display:grid;gap:12px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.mo h2{font-size:24px;line-height:1.05}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{display:grid;gap:2px}
+.stat .big{font-size:52px;line-height:.9;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal div{aspect-ratio:1;max-width:100%;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;font:500 13px var(--mono);color:var(--muted)}
+.cal .on{background:var(--seed);border-color:var(--seed);color:var(--seed-ink)}
+.cal .miss{border-color:var(--no);color:var(--no)}
+.cal .now{border:2px solid var(--fg);color:var(--fg)}
+.cal .soon{opacity:.4;border-style:dashed}
+.notes{display:grid;gap:0}
+.note{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.note b{font:500 12px var(--mono);color:var(--seed);padding-top:3px}
+.note p{margin:0}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
+.tabs nav{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.tabs a{display:grid;justify-items:center;gap:2px;padding:10px 0 12px;color:var(--muted);text-decoration:none;font:600 13px var(--body)}
+.tabs a svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.tabs a[aria-current="page"]{color:var(--seed)}
+.demo{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px;color:var(--muted);border-top:1px dashed var(--line);padding-top:14px}
+.demo select{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit}
+.demo button{background:none;border:0;color:var(--no);font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+.mirror{border-color:var(--seed)}
+.gate{display:grid;gap:14px;padding-top:12vh}
+.gh{font-size:56px;line-height:.9;font-weight:800}
+.form{display:grid;gap:8px}
+.form input{width:100%;box-sizing:border-box;padding:13px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:16px var(--body)}
+.form .btn{margin-top:8px}
+.link{justify-self:start;background:none;border:0;color:var(--seed);font:600 15px var(--body);padding:0;cursor:pointer;text-decoration:underline}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:9;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:no-preference){.card,.mo{animation:in .35s ease both}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
+</style>
+
+<div class="app" id="app"></div>
+<div class="tabs"><nav aria-label="Seções">
+  <a href="#hoje" data-tab="hoje"><svg viewBox="0 0 24 24"><path d="M12 20V10M12 10c0-3 2-5 6-5 0 4-2 6-6 5ZM12 13c0-3-2-5-6-5 0 4 2 6 6 5Z"/></svg>Hoje</a>
+  <a href="#agora" data-tab="agora"><svg viewBox="0 0 24 24"><path d="M4 12h3l2-6 4 12 2-6h5"/></svg>Preciso ouvir</a>
+  <a href="#placar" data-tab="placar"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 4v16"/></svg>Placar</a>
+</nav></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="conteudo/mes1.js"></script>
+<script>
+let D=[],M=[];
+const sb=supabase.createClient(window.CONFIG.SUPABASE_URL,window.CONFIG.SUPABASE_ANON_KEY);
+let S={inicio:null,r:{}},USER=null,URLS={},timer=null;
+const hojeSP=()=>new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
+function save(){clearTimeout(timer);timer=setTimeout(async()=>{const{error}=await sb.from('progresso').upsert({user_id:USER.id,inicio:S.inicio,estado:S.r,atualizado_em:new Date().toISOString()});if(error)toast('Não foi possível salvar. Confira sua internet.')},600)}
+const dia=()=>Math.min(D.length,Math.max(1,Math.round((new Date(hojeSP()+'T12:00')-new Date(S.inicio+'T12:00'))/864e5)+1));
+const rec=n=>S.r[n]||(S.r[n]={});
+const fiz=n=>S.r[n]&&S.r[n].f==='fiz';
+function seq(){let s=0;for(let n=dia();n>=1;n--){if(fiz(n))s++;else if(n===dia()&&!S.r[n]?.f)continue;else break}return s}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>{s=Math.max(0,Math.round(s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const PLAY='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',PAUSE='<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+
+/* áudio */
+const au=new Audio();au.preload='metadata';let ctx=null;const durs={};
+function play(n,mode){
+  const d=D[n-1];
+  if(ctx&&ctx.n===n&&ctx.mode===mode){if(au.paused){if(ctx.b&&au.currentTime>=ctx.b-.3)au.currentTime=ctx.a;au.play().catch(()=>{})}else au.pause();return}
+  ctx={n,mode,a:mode==='full'?0:d.a,b:mode==='full'?null:d.b};
+  au.src=URLS[d.id];
+  au.addEventListener('loadedmetadata',()=>{durs[n]=au.duration;au.currentTime=ctx.a;ui()},{once:true});
+  au.play().catch(()=>{});ui();
+}
+au.ontimeupdate=()=>{if(ctx&&ctx.b&&au.currentTime>=ctx.b){au.pause()}ui()};
+au.onplay=au.onpause=au.onended=ui;
+function ui(){document.querySelectorAll('.pl').forEach(p=>{
+  const n=+p.dataset.n,mode=p.dataset.mode,d=D[n-1],on=ctx&&ctx.n===n&&ctx.mode===mode;
+  const a=mode==='full'?0:d.a,b=mode==='full'?(durs[n]||0):d.b,len=b-a;
+  const cur=on?Math.min(len,Math.max(0,au.currentTime-a)):0;
+  p.querySelector('.play').innerHTML=on&&!au.paused?PAUSE:PLAY;
+  p.querySelector('.play').setAttribute('aria-label',(on&&!au.paused?'Pausar ':'Ouvir ')+(mode==='full'?'a semente completa':'o trecho'));
+  p.querySelector('.bar b').style.width=(len?cur/len*100:0)+'%';
+  p.querySelector('.t0').textContent=fmt(cur);p.querySelector('.t1').textContent=len?fmt(len):'—';
+});document.querySelectorAll('.short').forEach(s=>s.setAttribute('aria-pressed',!!(ctx&&ctx.mode==='short'&&ctx.n===+s.dataset.n)))}
+const player=(n,mode,cls='')=>`<div class="pl" data-n="${n}" data-mode="${mode}"><button class="play ${cls}" data-play="${n}" data-mode="${mode}">${PLAY}</button><div class="meta"><div class="bar"><b></b></div><div class="time"><span class="t0">0:00</span><span class="t1">—</span></div></div></div>`;
+// carrega durações para mostrar o tempo antes de tocar
+function preload(){D.forEach((d,i)=>{if(!URLS[d.id]||i+1>dia())return;const x=new Audio();x.preload='metadata';x.src=URLS[d.id];x.onloadedmetadata=()=>{durs[i+1]=x.duration;ui()}})}
+
+/* telas */
+function track(){let h='';for(let n=1;n<=30;n++){const c=n>dia()?'':fiz(n)?'on':S.r[n]?.f==='nao'?'miss':'';h+=`<i class="${c} ${n===dia()?'now':''}" title="Dia ${n}"></i>`}return `<div class="track" aria-label="Dias do mês">${h}</div>`}
+function hoje(){
+  const n=dia(),d=D[n-1],r=rec(n);
+  let h=`<header class="top"><div><div class="eyebrow">Mês 1 · Acordar</div><h1>Dia ${n}</h1></div><div class="of">${n} de 30<br>${seq()} em sequência</div></header>${track()}`;
+  h+=`<section class="card"><div class="step"><span class="eyebrow">Semente</span><span class="when">manhã</span></div><h2>${esc(d.t)}</h2>${player(n,'full')}<button class="short" data-short="${n}">Sem tempo? Ouça 1 minuto</button><p class="idea">${esc(d.ideia)}</p></section>`;
+  h+=`<section class="card"><div class="step"><span class="eyebrow">Decisão do dia</span><span class="when">durante o dia</span></div><p class="gesto">${esc(d.gesto)}</p>${r.g?'<div class="done">Decisão assumida</div>':'<button class="btn" data-act="g">Assumo essa decisão</button>'}</section>`;
+  h+=`<section class="card"><div class="step"><span class="eyebrow">Fechamento</span><span class="when">noite</span></div>`;
+  if(r.closed){h+=`<div class="done" style="color:${r.f==='fiz'?'var(--ok)':'var(--no)'}">${r.f==='fiz'?'Dia acordado':'Dia fechado sem cumprir a decisão'}</div>${r.nota?`<p class="muted" style="margin:0">“${esc(r.nota)}”</p>`:''}<button class="btn ghost" data-act="reopen">Editar fechamento</button>`}
+  else h+=`<p style="margin:0">Você cumpriu a decisão de hoje?</p><div class="choice"><button class="y" data-f="fiz" aria-pressed="${r.f==='fiz'}">Cumpri</button><button class="n" data-f="nao" aria-pressed="${r.f==='nao'}">Não cumpri</button></div><label for="nota">${esc(d.q)}</label><textarea id="nota" placeholder="Uma linha basta.">${esc(r.nota||'')}</textarea><button class="btn" data-act="close" ${r.f?'':'disabled'}>Fechar o dia</button>`;
+  h+=`</section>`;
+  if(n===7&&rec(7).closed)h+=mirror();
+  else if(n<7)h+=`<p class="muted" style="margin:0;font-size:14px">Amanhã chega a semente do dia ${n+1}.</p>`;
+  return h;
+}
+function mirror(){const done=[1,2,3,4,5,6,7].filter(fiz).length,ns=[1,2,3,4,5,6,7].filter(n=>S.r[n]?.nota);
+  return `<section class="card mirror"><span class="eyebrow">Espelho da semana</span><h2>${done} de 7 dias acordado</h2><p style="margin:0" class="muted">${done>=5?'Semana forte. Leve a decisão mais difícil para a próxima.':done>=3?'Você começou. Olhe os dias em que travou e veja o que eles têm em comum.':'A semana pesou. Recomece amanhã pela decisão mais simples.'}</p>${ns.length?'<div class="notes">'+ns.map(n=>`<div class="note"><b>Dia ${n}</b><p>${esc(S.r[n].nota)}</p></div>`).join('')+'</div>':''}</section>`}
+function agora(){
+  return `<header><div class="eyebrow">Preciso ouvir isso agora</div><h1 style="font-size:44px;line-height:.95;margin-top:6px">O que está pesando?</h1><p class="muted" style="margin:8px 0 0">Escolha o momento e ouça o trecho certo, em cerca de 1 minuto.</p></header><div class="moments">`+
+  M.map(([m,n])=>`<div class="mo"><h2>${esc(m)}</h2>${player(n,'moment','sm')}<span class="muted" style="font-size:14px">Da semente “${esc(D[n-1].t)}”</span></div>`).join('')+`</div>`;
+}
+function placar(){
+  const n=dia(),done=Object.keys(S.r).filter(k=>fiz(+k)).length;
+  let cal='';for(let i=1;i<=30;i++){const c=i>D.length?'soon':i>n?'':fiz(i)?'on':S.r[i]?.f==='nao'?'miss':'';cal+=`<div class="${c} ${i===n?'now':''}" title="Dia ${i}">${i}</div>`}
+  const ns=Object.keys(S.r).map(Number).sort((a,b)=>b-a).filter(k=>S.r[k].nota);
+  return `<header><div class="eyebrow">Placar · Mês 1 · Acordar</div></header>
+  <section class="stats"><div class="stat"><div class="big">${done}</div><span>dias acordado</span></div><div class="stat"><div class="big">${seq()}</div><span>em sequência</span></div><div class="stat"><div class="big">${n}</div><span>de 30 dias</span></div></section>
+  <section class="card"><span class="eyebrow">Seu mês</span><div class="cal">${cal}</div><p class="muted" style="margin:0;font-size:14px">Dourado é dia acordado. Contorno vermelho é dia fechado sem cumprir a decisão.</p></section>
+  ${n===7&&rec(7).closed?mirror():''}
+  <section class="card"><span class="eyebrow">Diário da mudança</span>${ns.length?'<div class="notes">'+ns.map(k=>`<div class="note"><b>Dia ${k}</b><p>${esc(S.r[k].nota)}</p></div>`).join('')+'</div>':'<p class="muted" style="margin:0">O que você escrever no fechamento de cada dia aparece aqui.</p>'}</section>
+  <div class="demo"><span>${esc(USER.email)}</span><button data-act="sair">Sair</button></div>
+  `;
+}
+const V={hoje,agora,placar};let tab='hoje';
+function render(){tab=(location.hash.slice(1)in V)?location.hash.slice(1):'hoje';document.getElementById('app').innerHTML=V[tab]();document.querySelectorAll('.tabs a').forEach(a=>a.dataset.tab===tab?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));ui()}
+addEventListener('hashchange',()=>{if(D.length&&S.inicio){render();scrollTo(0,0)}});
+document.addEventListener('click',e=>{
+  const p=e.target.closest('[data-play]');if(p)return play(+p.dataset.play,p.dataset.mode);
+  const s=e.target.closest('[data-short]');if(s)return play(+s.dataset.short,'short');
+  const n=dia(),r=rec(n);
+  const f=e.target.closest('[data-f]');if(f){r.f=f.dataset.f;const t=document.getElementById('nota');if(t)r.nota=t.value;save();render();return}
+  const a=e.target.closest('[data-act]');if(!a)return;
+  const act=a.dataset.act;
+  if(act==='g'){r.g=true;save();render()}
+  else if(act==='close'){const t=document.getElementById('nota');r.nota=t?t.value.trim():'';r.closed=true;save();render()}
+  else if(act==='reopen'){r.closed=false;save();render()}
+  else if(act==='sair'){sb.auth.signOut().then(()=>location.reload())}
+});
+document.addEventListener('input',e=>{if(e.target.id==='nota'){rec(dia()).nota=e.target.value;save()}});
+function toast(t){let e=document.getElementById('toast');if(!e){e=document.createElement('div');e.id='toast';e.className='toast';e.setAttribute('role','status');document.body.append(e)}e.textContent=t;e.hidden=false;clearTimeout(e._t);e._t=setTimeout(()=>e.hidden=true,4000)}
+function tela(h){document.querySelector('.tabs').hidden=true;document.getElementById('app').innerHTML=`<div class="gate"><div class="eyebrow">Semente Diária</div>${h}</div>`}
+function telaLogin(aviso){tela(`<h1 class="gh">Entrar</h1><p class="muted">Use o e-mail da sua assinatura.</p><form id="fl" class="form"><label for="em">E-mail</label><input id="em" type="email" autocomplete="email" required><label for="pw">Senha</label><input id="pw" type="password" autocomplete="current-password" required><button class="btn">Entrar</button></form><button class="link" id="pa">Primeiro acesso: criar senha</button><button class="link" id="esq">Esqueci a senha</button><p class="muted" id="msg">${aviso||''}</p>`);
+  const msg=document.getElementById('msg');
+  fl.onsubmit=async e=>{e.preventDefault();msg.textContent='Entrando...';const{error}=await sb.auth.signInWithPassword({email:em.value.trim(),password:pw.value});if(error){msg.textContent='E-mail ou senha incorretos. Se é seu primeiro acesso, toque em "Primeiro acesso: criar senha".';return}boot()};
+  document.getElementById('pa').onclick=telaPrimeiro;
+  esq.onclick=async()=>{const v=em.value.trim();if(!v){msg.textContent='Digite seu e-mail acima e toque de novo.';em.focus();return}await sb.auth.resetPasswordForEmail(v,{redirectTo:location.origin+location.pathname});msg.textContent='Se esse e-mail tem assinatura, enviamos um link para você criar a senha. Confira também o spam.'}}
+function telaPrimeiro(){tela(`<h1 class="gh">Criar senha</h1><p class="muted">Use o mesmo e-mail da compra.</p><form id="fp" class="form"><label for="pe">E-mail</label><input id="pe" type="email" autocomplete="email" required><label for="ps">Crie uma senha (mínimo 8 caracteres)</label><input id="ps" type="password" minlength="8" autocomplete="new-password" required><button class="btn">Criar e entrar</button></form><button class="link" id="vl">Voltar</button><p class="muted" id="mp"></p>`);
+  const m=document.getElementById('mp');document.getElementById('vl').onclick=()=>telaLogin();
+  document.getElementById('fp').onsubmit=async e=>{e.preventDefault();m.textContent='Criando...';const email=document.getElementById('pe').value.trim(),password=document.getElementById('ps').value;try{const r=await fetch(window.CONFIG.SUPABASE_URL+'/functions/v1/primeiro-acesso',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,password})});const t=await r.text();if(!r.ok){m.textContent=t;return}}catch(x){m.textContent='Sem conexão. Tente de novo.';return}const{error}=await sb.auth.signInWithPassword({email,password});if(error){m.textContent='Senha criada, mas não consegui entrar. Volte e entre pela tela de login.';return}boot()}}
+function telaSenha(){tela(`<h1 class="gh">Crie sua senha</h1><form id="fs" class="form"><label for="np">Nova senha (mínimo 8 caracteres)</label><input id="np" type="password" minlength="8" autocomplete="new-password" required><button class="btn">Salvar e entrar</button></form><p class="muted" id="msg"></p>`);
+  fs.onsubmit=async e=>{e.preventDefault();const{error}=await sb.auth.updateUser({password:np.value});if(error){msg.textContent='Não deu certo: '+error.message;return}history.replaceState(null,'',location.pathname);boot()}}
+function telaInativa(){tela(`<h1 class="gh">Assinatura inativa</h1><p class="muted">Não encontramos uma assinatura ativa para ${esc(USER.email)}. Se você acabou de assinar, aguarde alguns minutos e entre de novo. Se usou outro e-mail na compra, entre com ele.</p><button class="btn ghost" id="out">Entrar com outro e-mail</button>`);out.onclick=()=>sb.auth.signOut().then(()=>telaLogin())}
+const linkTipo=(/type=(invite|recovery)/.exec(location.hash)||[])[1];
+async function boot(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session)return telaLogin();
+  USER=session.user;
+  if(linkTipo&&!boot.senhaFeita){boot.senhaFeita=1;return telaSenha()}
+  const{data:ativa}=await sb.rpc('assinatura_ativa');
+  if(!ativa)return telaInativa();
+  D=window.MES1.dias;M=window.MES1.momentos;
+  const{data:p}=await sb.from('progresso').select('inicio,estado').eq('user_id',USER.id).maybeSingle();
+  if(p){S.inicio=p.inicio;S.r=p.estado||{}}else{S.inicio=hojeSP();await sb.from('progresso').insert({user_id:USER.id,inicio:S.inicio})}
+  const ids=D.slice(0,dia()).map(d=>d.id+'.mp3');
+  const{data:u}=await sb.storage.from('audios').createSignedUrls(ids,6*3600);
+  (u||[]).forEach(x=>{if(x.signedUrl)URLS[parseInt(x.path)]=x.signedUrl});
+  M=M.filter(([,n])=>n<=dia());
+  document.querySelector('.tabs').hidden=false;if(/access_token/.test(location.hash))history.replaceState(null,'','#hoje');render();preload();
+}
+boot();
+</script>

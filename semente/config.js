@@ -1,0 +1,4 @@
+window.CONFIG={
+  SUPABASE_URL:'https://lpeppbywnzlkgffwdhkw.supabase.co',
+  SUPABASE_ANON_KEY:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwZXBwYnl3bnpsa2dmZndkaGt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNDgxMzIsImV4cCI6MjEwOTcyNDEzMn0.w-crpymw-oqQ6PxZDA74z1OKPfNf44vA6dNVKvo9Huo'
+};
