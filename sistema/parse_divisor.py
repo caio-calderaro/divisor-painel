@@ -66,6 +66,7 @@ def parse(path):
     fname = os.path.basename(path)
     m = re.search(r'(\d{2})(\d{2})(\d{4})', fname)
     cur = None
+    category = None  # parte do relatório (E-commerce, Nutra...), quando o Word divide os produtos
     pending = None  # formato novo: título da seção numa tabela e os dados na tabela seguinte
     for b in iter_blocks(d):
         if isinstance(b, Paragraph):
@@ -75,6 +76,11 @@ def parse(path):
             tx = b.text.strip()
             m2 = re.search(r'(\d{2}/\d{2}/\d{4})', tx)
             if m2 and not report["date"]: report["date"] = m2.group(1)
+            # divisão do relatório em partes, ex.: "PARTE 1 — E-COMMERCE (10 produtos)"
+            mp = re.fullmatch(r'PARTE\s+\d+\s*[—–:-]\s*(.+?)(?:\s*\(\d+\s*produtos?\))?', tx, re.I)
+            if mp:
+                category = mp.group(1).strip().lower().capitalize(); cur = None; pending = None
+                continue
             m3 = re.fullmatch(r'-{2,}\s*(.+?)\s*-{2,}', tx)
             m4 = re.fullmatch(r'\d{1,2}\.\s+(.+?)', tx) if not m3 else None
             if m3 or m4:
@@ -83,6 +89,7 @@ def parse(path):
                 name = re.split(r'\s*🔒', name)[0].strip()
                 cur = {"name": name}; report["products"].append(cur)
                 if hidden: cur['hidden'] = True
+                if category: cur['category'] = category
                 pending = None
             continue
         if cur is None: continue

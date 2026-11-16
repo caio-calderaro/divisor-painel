@@ -66,6 +66,8 @@ select.week{appearance:none;background:var(--surface) url("data:image/svg+xml,%3
 .sec-t{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between;margin:32px 0 14px}
 .sec-t h2{font-size:19px;letter-spacing:-.02em}
 .sec-t span{color:var(--ink-3);font-size:13px}
+.sec-t.cat{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.sec-t.cat h2{display:flex;align-items:center;gap:10px}.sec-t.cat h2 em{font-style:normal;width:26px;height:26px;border-radius:8px;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center;font-size:13px;font-weight:800}
+.grid>*{min-width:0}.tag{max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);text-align:left;display:flex;flex-direction:column;gap:14px;transition:transform .15s,border-color .15s}
 .card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--brand) 45%,var(--line))}
@@ -139,8 +141,8 @@ label.scrim{display:block}
 .btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
 .all{display:flex;gap:10px}
 .disc{font-size:12px;color:var(--ink-3);text-align:center;padding:30px 0 10px}
-@media (max-width:900px){.layout{grid-template-columns:1fr;padding-top:16px}.side{display:none}.chips{display:flex}.kpis{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:520px){.top .pill{display:none}.kpi b{font-size:18px}body{overflow-x:hidden}.wrap{padding:0 16px}.hero{padding:24px 20px}.dh,.db{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr);padding-top:16px}.side{display:none}.chips{display:flex}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.top .pill{display:none}.kpi b{font-size:18px}body{overflow-x:hidden}.wrap{padding:0 16px}.hero{padding:24px 20px}.dh,.db{padding-left:16px;padding-right:16px}.grid{grid-template-columns:minmax(0,1fr)}}
 
 /* ================= DIVISOR PRO: identidade premium (preto + dourado champanhe, títulos em serifa) ================= */
 :root,:root[data-theme="dark"]{ color-scheme:dark;
@@ -226,8 +228,7 @@ body{background:radial-gradient(1200px 500px at 85% -10%,rgba(212,175,106,.07),t
       <div class="kpi"><b>7</b><span>SmartAdv · Maxweb · Maxweb / BuyGoods · GuruMedia · ClickBank · BuyGoods · MediaScalers / SmartAdv</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da quinzena</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p0_0" aria-label="Ver campanha de Her Bodhi">
+  <div class="sec-t"><h2>Produtos da quinzena</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p0_0" aria-label="Ver campanha de Her Bodhi">
 <label for="p0_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Her Bodhi</h3><div class="plat">SmartAdv · EUA</div></div>
     <div class="comm"><b>US$ 60,00</b><span>comissão</span></div></div>
@@ -721,8 +722,7 @@ Afiliação: MediaScalers: 1 clique + solicitar afiliação · SmartAdv: Solicit
       <div class="kpi"><b>7</b><span>Maxweb / BuyGoods · SmartAdv / Maxweb / GuruMedia · BuyGoods · MediaScalers / SmartAdv · BuyGoods / Maxweb · Maxweb · MediaScalers</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da quinzena</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p1_0" aria-label="Ver campanha de Gelagen">
+  <div class="sec-t"><h2>Produtos da quinzena</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p1_0" aria-label="Ver campanha de Gelagen">
 <label for="p1_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Gelagen</h3><div class="plat">Maxweb / BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 200,00</b><span>comissão</span></div></div>

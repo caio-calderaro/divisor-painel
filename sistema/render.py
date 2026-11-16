@@ -124,14 +124,19 @@ def week_section(r, w):
     growing = sum(1 for p in P if trend(p.get('visits'))[0] == 'up')
     quick = sum(1 for p in P if re.fullmatch(r'1 clique', (p.get('aff_process') or '').strip(), re.I))
     plats = list(dict.fromkeys(p.get('platform') for p in P if p.get('platform')))
+    # o Word pode dividir os produtos em partes (ex.: E-commerce e Nutra); a numeração recomeça em cada parte
+    cats = list(dict.fromkeys(p.get('category') for p in P))
+    rank_of, cnt = [], {}
+    for p in P:
+        cnt[p.get('category')] = cnt.get(p.get('category'), 0) + 1; rank_of.append(cnt[p.get('category')] - 1)
     cards = []
     for i, p in enumerate(P):
-        pid = f'p{w}_{i}'
+        pid = f'p{w}_{i}'; ri = rank_of[i]
         sc, st = trend(p.get('searches')); vc, vt = trend(p.get('visits'))
         lock = ' <span class="lock">🔒 Exclusivo</span>' if p.get('hidden') else ''
         cards.append(f'''<div class="pc"><input type="checkbox" class="tg" id="{pid}" aria-label="Ver campanha de {esc(p.get('name'))}">
 <label for="{pid}" class="card">
-  <div class="h"><div class="rank">{i + 1}</div><div><h3>{esc(p.get('name'))}{lock}</h3><div class="plat">{esc(p.get('platform'))} · {esc(p.get('country') or '')}</div></div>
+  <div class="h"><div class="rank">{ri + 1}</div><div><h3>{esc(p.get('name'))}{lock}</h3><div class="plat">{esc(p.get('platform'))} · {esc(p.get('country') or '')}</div></div>
     <div class="comm"><b>{usd(p.get('commission_usd'))}</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>{fmt(last(p.get('searches')))}</b><span class="tr {sc}">{st}</span></div></div>
@@ -140,7 +145,20 @@ def week_section(r, w):
   <div class="foot"><span class="tag">{esc(p.get('aff_process') or '')}</span><span class="go">Ver campanha →</span></div>
 </label>
 <label for="{pid}" class="scrim" aria-hidden="true"></label>
-{drawer(p, i, pid)}</div>''')
+{drawer(p, ri, pid)}</div>''')
+    hint = '<span>Toque em um produto para ver a campanha completa</span>'
+    if len(cats) > 1 or cats[0]:
+        parts = []
+        for k, c in enumerate(cats):
+            idx = [i for i, p in enumerate(P) if p.get('category') == c]
+            n = len(idx)
+            parts.append(f'<div class="sec-t cat"><h2><em>{k + 1}</em>{esc(c or "Outros")}</h2>'
+                         f'<span>{n} produto{"s" if n != 1 else ""}{" · toque em um produto para ver a campanha completa" if k == 0 else ""}</span></div>'
+                         f'<div class="grid">{"".join(cards[i] for i in idx)}</div>')
+        jump = ' · '.join(f'{esc(c or "Outros")} ({sum(1 for p in P if p.get("category") == c)})' for c in cats)
+        products_html = f'<div class="sec-t"><h2>{V["sec"]}</h2><span>{jump}</span></div>' + ''.join(parts)
+    else:
+        products_html = f'<div class="sec-t"><h2>{V["sec"]}</h2>{hint}</div><div class="grid">{"".join(cards)}</div>'
     return f'''<section class="week week{w}">
   <section class="hero">
     <div class="eyb">{V['eyb'].format(num=r.get('num', ''), date=label_date(r['date']))}</div>
@@ -153,8 +171,7 @@ def week_section(r, w):
       <div class="kpi"><b>{len(plats)}</b><span>{esc(' · '.join(plats))}</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>{V['sec']}</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid">{''.join(cards)}</div>
+  {products_html}
   <p class="disc">Este relatório não garante resultados financeiros. Os resultados variam conforme a execução de cada aluno.</p>
 </section>'''
 

@@ -65,6 +65,8 @@ select.week{appearance:none;background:var(--surface) url("data:image/svg+xml,%3
 .sec-t{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between;margin:32px 0 14px}
 .sec-t h2{font-size:19px;letter-spacing:-.02em}
 .sec-t span{color:var(--ink-3);font-size:13px}
+.sec-t.cat{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.sec-t.cat h2{display:flex;align-items:center;gap:10px}.sec-t.cat h2 em{font-style:normal;width:26px;height:26px;border-radius:8px;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center;font-size:13px;font-weight:800}
+.grid>*{min-width:0}.tag{max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);text-align:left;display:flex;flex-direction:column;gap:14px;transition:transform .15s,border-color .15s}
 .card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--brand) 45%,var(--line))}
@@ -138,8 +140,8 @@ label.scrim{display:block}
 .btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
 .all{display:flex;gap:10px}
 .disc{font-size:12px;color:var(--ink-3);text-align:center;padding:30px 0 10px}
-@media (max-width:900px){.layout{grid-template-columns:1fr;padding-top:16px}.side{display:none}.chips{display:flex}.kpis{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:520px){.top .pill{display:none}.kpi b{font-size:18px}body{overflow-x:hidden}.wrap{padding:0 16px}.hero{padding:24px 20px}.dh,.db{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr);padding-top:16px}.side{display:none}.chips{display:flex}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.top .pill{display:none}.kpi b{font-size:18px}body{overflow-x:hidden}.wrap{padding:0 16px}.hero{padding:24px 20px}.dh,.db{padding-left:16px;padding-right:16px}.grid{grid-template-columns:minmax(0,1fr)}}
 #w0:checked~.layout .week0{display:block}#w0:checked~.layout .side .wk0{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w0:checked~.layout .side .wk0 .d{background:var(--brand)}#w0:checked~.layout .chips .wk0{background:var(--brand);border-color:var(--brand);color:#06210f}#w0:focus-visible~.layout .wk0{outline:2px solid var(--brand);outline-offset:2px}
 #w1:checked~.layout .week1{display:block}#w1:checked~.layout .side .wk1{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w1:checked~.layout .side .wk1 .d{background:var(--brand)}#w1:checked~.layout .chips .wk1{background:var(--brand);border-color:var(--brand);color:#06210f}#w1:focus-visible~.layout .wk1{outline:2px solid var(--brand);outline-offset:2px}
 #w2:checked~.layout .week2{display:block}#w2:checked~.layout .side .wk2{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}#w2:checked~.layout .side .wk2 .d{background:var(--brand)}#w2:checked~.layout .chips .wk2{background:var(--brand);border-color:var(--brand);color:#06210f}#w2:focus-visible~.layout .wk2{outline:2px solid var(--brand);outline-offset:2px}
@@ -173,8 +175,7 @@ label.scrim{display:block}
       <div class="kpi"><b>7</b><span>GuruMedia · MediaScalers · SmartAdv · Maxweb · BuyGoods · Maxweb / BuyGoods · BuyGoods / Maxweb</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p0_0" aria-label="Ver campanha de Rocket Chef Turbo Grill">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>E-commerce (10) · Nutra (10)</span></div><div class="sec-t cat"><h2><em>1</em>E-commerce</h2><span>10 produtos · toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p0_0" aria-label="Ver campanha de Rocket Chef Turbo Grill">
 <label for="p0_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Rocket Chef Turbo Grill</h3><div class="plat">GuruMedia · EUA</div></div>
     <div class="comm"><b>US$ 42,00</b><span>comissão</span></div></div>
@@ -654,9 +655,9 @@ CPA: R$ 560,00 a R$ 800,00
 STOP: R$ 800,00 — 20 cliques ou valor da comissão, o que vier primeiro
 Afiliação: 1 clique + solicitar afiliação — solicitar ao Gerente da Plataforma (PRODUTO OCULTO) — https://pulsetto.tech/">Copiar resumo da campanha</button>
   </div>
-</div></div><div class="pc"><input type="checkbox" class="tg" id="p0_10" aria-label="Ver campanha de SodaPeak">
+</div></div></div><div class="sec-t cat"><h2><em>2</em>Nutra</h2><span>10 produtos</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p0_10" aria-label="Ver campanha de SodaPeak">
 <label for="p0_10" class="card">
-  <div class="h"><div class="rank">11</div><div><h3>SodaPeak</h3><div class="plat">BuyGoods · EUA</div></div>
+  <div class="h"><div class="rank">1</div><div><h3>SodaPeak</h3><div class="plat">BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 190,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>22.200</b><span class="tr up">▲ novo</span></div></div>
@@ -666,7 +667,7 @@ Afiliação: 1 clique + solicitar afiliação — solicitar ao Gerente da Plataf
 </label>
 <label for="p0_10" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="SodaPeak">
-  <div class="dh"><div class="rank">11</div><div><h2>SodaPeak</h2><div class="plat">BuyGoods · EUA · US$ 190,00 por venda</div></div><label for="p0_10" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">1</div><div><h2>SodaPeak</h2><div class="plat">BuyGoods · EUA · US$ 190,00 por venda</div></div><label for="p0_10" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>BuyGoods</b></div>
@@ -704,7 +705,7 @@ Afiliação: 1 clique + solicitar afiliação — https://sodapeak.com/">Copiar 
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_11" aria-label="Ver campanha de Nerve Calm">
 <label for="p0_11" class="card">
-  <div class="h"><div class="rank">12</div><div><h3>Nerve Calm</h3><div class="plat">BuyGoods · EUA</div></div>
+  <div class="h"><div class="rank">2</div><div><h3>Nerve Calm</h3><div class="plat">BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 150,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>1.600</b><span class="tr up">▲ 23%</span></div></div>
@@ -714,7 +715,7 @@ Afiliação: 1 clique + solicitar afiliação — https://sodapeak.com/">Copiar 
 </label>
 <label for="p0_11" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="Nerve Calm">
-  <div class="dh"><div class="rank">12</div><div><h2>Nerve Calm</h2><div class="plat">BuyGoods · EUA · US$ 150,00 por venda</div></div><label for="p0_11" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">2</div><div><h2>Nerve Calm</h2><div class="plat">BuyGoods · EUA · US$ 150,00 por venda</div></div><label for="p0_11" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>BuyGoods</b></div>
@@ -752,7 +753,7 @@ Afiliação: 1 clique + solicitar afiliação — https://getnervecalm.com/">Cop
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_12" aria-label="Ver campanha de Harmonia Cortisol Support">
 <label for="p0_12" class="card">
-  <div class="h"><div class="rank">13</div><div><h3>Harmonia Cortisol Support</h3><div class="plat">SmartAdv · EUA</div></div>
+  <div class="h"><div class="rank">3</div><div><h3>Harmonia Cortisol Support</h3><div class="plat">SmartAdv · EUA</div></div>
     <div class="comm"><b>US$ 85,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>260</b><span class="tr flat">● estável</span></div></div>
@@ -762,7 +763,7 @@ Afiliação: 1 clique + solicitar afiliação — https://getnervecalm.com/">Cop
 </label>
 <label for="p0_12" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="Harmonia Cortisol Support">
-  <div class="dh"><div class="rank">13</div><div><h2>Harmonia Cortisol Support</h2><div class="plat">SmartAdv · EUA · US$ 85,00 por venda</div></div><label for="p0_12" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">3</div><div><h2>Harmonia Cortisol Support</h2><div class="plat">SmartAdv · EUA · US$ 85,00 por venda</div></div><label for="p0_12" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>SmartAdv</b></div>
@@ -800,7 +801,7 @@ Afiliação: Solicitar afiliação — https://drinkharmonia.com/">Copiar resumo
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_13" aria-label="Ver campanha de Gelagen">
 <label for="p0_13" class="card">
-  <div class="h"><div class="rank">14</div><div><h3>Gelagen</h3><div class="plat">GuruMedia · EUA</div></div>
+  <div class="h"><div class="rank">4</div><div><h3>Gelagen</h3><div class="plat">GuruMedia · EUA</div></div>
     <div class="comm"><b>US$ 215,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>12.100</b><span class="tr up">▲ 31x</span></div></div>
@@ -810,7 +811,7 @@ Afiliação: Solicitar afiliação — https://drinkharmonia.com/">Copiar resumo
 </label>
 <label for="p0_13" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="Gelagen">
-  <div class="dh"><div class="rank">14</div><div><h2>Gelagen</h2><div class="plat">GuruMedia · EUA · US$ 215,00 por venda</div></div><label for="p0_13" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">4</div><div><h2>Gelagen</h2><div class="plat">GuruMedia · EUA · US$ 215,00 por venda</div></div><label for="p0_13" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>GuruMedia</b></div>
@@ -848,7 +849,7 @@ Afiliação: Solicitar afiliação — https://mygelagen.com/">Copiar resumo da 
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_14" aria-label="Ver campanha de BreathiZen">
 <label for="p0_14" class="card">
-  <div class="h"><div class="rank">15</div><div><h3>BreathiZen</h3><div class="plat">GuruMedia · EUA</div></div>
+  <div class="h"><div class="rank">5</div><div><h3>BreathiZen</h3><div class="plat">GuruMedia · EUA</div></div>
     <div class="comm"><b>US$ 210,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>27.100</b><span class="tr up">▲ 2.710x</span></div></div>
@@ -858,7 +859,7 @@ Afiliação: Solicitar afiliação — https://mygelagen.com/">Copiar resumo da 
 </label>
 <label for="p0_14" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="BreathiZen">
-  <div class="dh"><div class="rank">15</div><div><h2>BreathiZen</h2><div class="plat">GuruMedia · EUA · US$ 210,00 por venda</div></div><label for="p0_14" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">5</div><div><h2>BreathiZen</h2><div class="plat">GuruMedia · EUA · US$ 210,00 por venda</div></div><label for="p0_14" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>GuruMedia</b></div>
@@ -896,7 +897,7 @@ Afiliação: Solicitar afiliação — https://mybreathizen.com/">Copiar resumo 
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_15" aria-label="Ver campanha de Curex">
 <label for="p0_15" class="card">
-  <div class="h"><div class="rank">16</div><div><h3>Curex</h3><div class="plat">GuruMedia · EUA</div></div>
+  <div class="h"><div class="rank">6</div><div><h3>Curex</h3><div class="plat">GuruMedia · EUA</div></div>
     <div class="comm"><b>US$ 69,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>4.400</b><span class="tr down">▼ 33%</span></div></div>
@@ -906,7 +907,7 @@ Afiliação: Solicitar afiliação — https://mybreathizen.com/">Copiar resumo 
 </label>
 <label for="p0_15" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="Curex">
-  <div class="dh"><div class="rank">16</div><div><h2>Curex</h2><div class="plat">GuruMedia · EUA · US$ 69,00 por venda</div></div><label for="p0_15" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">6</div><div><h2>Curex</h2><div class="plat">GuruMedia · EUA · US$ 69,00 por venda</div></div><label for="p0_15" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>GuruMedia</b></div>
@@ -944,7 +945,7 @@ Afiliação: Solicitar afiliação — https://getcurex.com/">Copiar resumo da c
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_16" aria-label="Ver campanha de Hinuki">
 <label for="p0_16" class="card">
-  <div class="h"><div class="rank">17</div><div><h3>Hinuki</h3><div class="plat">SmartAdv · EUA</div></div>
+  <div class="h"><div class="rank">7</div><div><h3>Hinuki</h3><div class="plat">SmartAdv · EUA</div></div>
     <div class="comm"><b>US$ 70,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>720</b><span class="tr up">▲ 72x</span></div></div>
@@ -954,7 +955,7 @@ Afiliação: Solicitar afiliação — https://getcurex.com/">Copiar resumo da c
 </label>
 <label for="p0_16" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="Hinuki">
-  <div class="dh"><div class="rank">17</div><div><h2>Hinuki</h2><div class="plat">SmartAdv · EUA · US$ 70,00 por venda</div></div><label for="p0_16" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">7</div><div><h2>Hinuki</h2><div class="plat">SmartAdv · EUA · US$ 70,00 por venda</div></div><label for="p0_16" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>SmartAdv</b></div>
@@ -992,7 +993,7 @@ Afiliação: Solicitar afiliação — https://tryhinuki.com/">Copiar resumo da 
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_17" aria-label="Ver campanha de Stallion Power">
 <label for="p0_17" class="card">
-  <div class="h"><div class="rank">18</div><div><h3>Stallion Power</h3><div class="plat">Maxweb / BuyGoods · EUA</div></div>
+  <div class="h"><div class="rank">8</div><div><h3>Stallion Power</h3><div class="plat">Maxweb / BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 200,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>6.600</b><span class="tr up">▲ 660x</span></div></div>
@@ -1002,7 +1003,7 @@ Afiliação: Solicitar afiliação — https://tryhinuki.com/">Copiar resumo da 
 </label>
 <label for="p0_17" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="Stallion Power">
-  <div class="dh"><div class="rank">18</div><div><h2>Stallion Power</h2><div class="plat">Maxweb / BuyGoods · EUA · US$ 200,00 por venda</div></div><label for="p0_17" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">8</div><div><h2>Stallion Power</h2><div class="plat">Maxweb / BuyGoods · EUA · US$ 200,00 por venda</div></div><label for="p0_17" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>Maxweb / BuyGoods</b></div>
@@ -1040,7 +1041,7 @@ Afiliação: 1 clique + solicitar afiliação — https://getstallionpower.com/"
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_18" aria-label="Ver campanha de Sugar Reset">
 <label for="p0_18" class="card">
-  <div class="h"><div class="rank">19</div><div><h3>Sugar Reset</h3><div class="plat">GuruMedia · EUA</div></div>
+  <div class="h"><div class="rank">9</div><div><h3>Sugar Reset</h3><div class="plat">GuruMedia · EUA</div></div>
     <div class="comm"><b>US$ 221,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>9.900</b><span class="tr up">▲ 10x</span></div></div>
@@ -1050,7 +1051,7 @@ Afiliação: 1 clique + solicitar afiliação — https://getstallionpower.com/"
 </label>
 <label for="p0_18" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="Sugar Reset">
-  <div class="dh"><div class="rank">19</div><div><h2>Sugar Reset</h2><div class="plat">GuruMedia · EUA · US$ 221,00 por venda</div></div><label for="p0_18" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">9</div><div><h2>Sugar Reset</h2><div class="plat">GuruMedia · EUA · US$ 221,00 por venda</div></div><label for="p0_18" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>GuruMedia</b></div>
@@ -1088,7 +1089,7 @@ Afiliação: Solicitar afiliação — https://forsugarreset.com/">Copiar resumo
   </div>
 </div></div><div class="pc"><input type="checkbox" class="tg" id="p0_19" aria-label="Ver campanha de MemoHoney">
 <label for="p0_19" class="card">
-  <div class="h"><div class="rank">20</div><div><h3>MemoHoney <span class="lock">🔒 Exclusivo</span></h3><div class="plat">BuyGoods / Maxweb · EUA</div></div>
+  <div class="h"><div class="rank">10</div><div><h3>MemoHoney <span class="lock">🔒 Exclusivo</span></h3><div class="plat">BuyGoods / Maxweb · EUA</div></div>
     <div class="comm"><b>US$ 190,00</b><span>comissão</span></div></div>
   <div class="metrics">
     <div class="m"><div class="l">Buscas / mês</div><div class="v"><b>8.100</b><span class="tr up">▲ novo</span></div></div>
@@ -1098,7 +1099,7 @@ Afiliação: Solicitar afiliação — https://forsugarreset.com/">Copiar resumo
 </label>
 <label for="p0_19" class="scrim" aria-hidden="true"></label>
 <div class="drawer" role="dialog" aria-label="MemoHoney">
-  <div class="dh"><div class="rank">20</div><div><h2>MemoHoney <span class="lock">🔒 Exclusivo</span></h2><div class="plat">BuyGoods / Maxweb · EUA · US$ 190,00 por venda</div></div><label for="p0_19" class="x" aria-label="Fechar">✕</label></div>
+  <div class="dh"><div class="rank">10</div><div><h2>MemoHoney <span class="lock">🔒 Exclusivo</span></h2><div class="plat">BuyGoods / Maxweb · EUA · US$ 190,00 por venda</div></div><label for="p0_19" class="x" aria-label="Fechar">✕</label></div>
   <div class="db">
     <div class="blk"><h5><em>1</em>Identificação</h5>
       <div class="rowk"><span>Plataforma</span><b>BuyGoods / Maxweb</b></div>
@@ -1148,8 +1149,7 @@ Afiliação: 1 clique + solicitar afiliação — solicitar ao Gerente da Plataf
       <div class="kpi"><b>4</b><span>GuruMedia · ClickBank · BuyGoods · SmartAdv</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p1_0" aria-label="Ver campanha de VapoCept">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p1_0" aria-label="Ver campanha de VapoCept">
 <label for="p1_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>VapoCept <span class="lock">🔒 Exclusivo</span></h3><div class="plat">GuruMedia · EUA</div></div>
     <div class="comm"><b>US$ 210,00</b><span>comissão</span></div></div>
@@ -1451,8 +1451,7 @@ Afiliação: Solicitar afiliação — https://forsugarreset.com/">Copiar resumo
       <div class="kpi"><b>5</b><span>SmartAdv · GuruMedia · Maxweb / BuyGoods · MediaScalers · ClickBank</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p2_0" aria-label="Ver campanha de Lulutox">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p2_0" aria-label="Ver campanha de Lulutox">
 <label for="p2_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Lulutox</h3><div class="plat">SmartAdv · EUA</div></div>
     <div class="comm"><b>US$ 50,00</b><span>comissão</span></div></div>
@@ -1802,8 +1801,7 @@ Afiliação: 1 clique — https://derila-ergo.com/">Copiar resumo da campanha</b
       <div class="kpi"><b>5</b><span>BuyGoods / Maxweb · ClickBank · Maxweb · Maxweb / BuyGoods · MediaScalers / SmartAdv</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p3_0" aria-label="Ver campanha de MemoHoney">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p3_0" aria-label="Ver campanha de MemoHoney">
 <label for="p3_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>MemoHoney <span class="lock">🔒 Exclusivo</span></h3><div class="plat">BuyGoods / Maxweb · EUA</div></div>
     <div class="comm"><b>US$ 190,00</b><span>comissão</span></div></div>
@@ -2105,8 +2103,7 @@ Afiliação: MediaScalers: 1 clique + solicitar afiliação  |  SmartAdv: Solici
       <div class="kpi"><b>4</b><span>Maxweb / BuyGoods · SmartAdv / Maxweb / GuruMedia · MediaScalers · Maxweb / MediaScalers / SmartAdv</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p4_0" aria-label="Ver campanha de Sodatide">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p4_0" aria-label="Ver campanha de Sodatide">
 <label for="p4_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Sodatide</h3><div class="plat">Maxweb / BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 200,00</b><span>comissão</span></div></div>
@@ -2456,8 +2453,7 @@ Afiliação: Maxweb / MediaScalers: 1 clique + solicitar afiliação | SmartAdv:
       <div class="kpi"><b>3</b><span>BuyGoods / Maxweb · MediaScalers / SmartAdv · BuyGoods</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p5_0" aria-label="Ver campanha de Vigor Boost">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p5_0" aria-label="Ver campanha de Vigor Boost">
 <label for="p5_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Vigor Boost</h3><div class="plat">BuyGoods / Maxweb · EUA</div></div>
     <div class="comm"><b>US$ 190,00</b><span>comissão</span></div></div>
@@ -2807,8 +2803,7 @@ Afiliação: 1 clique + solicitar afiliação — solicitar ao Gerente da Plataf
       <div class="kpi"><b>5</b><span>BuyGoods · Maxweb · ClickBank · SmartAdv · GuruMedia</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p6_0" aria-label="Ver campanha de Kinzeno">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p6_0" aria-label="Ver campanha de Kinzeno">
 <label for="p6_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Kinzeno <span class="lock">🔒 Exclusivo</span></h3><div class="plat">BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 75,00</b><span>comissão</span></div></div>
@@ -3158,8 +3153,7 @@ Afiliação: Solicitar afiliação — https://lulutox-official.com/">Copiar res
       <div class="kpi"><b>3</b><span>BuyGoods · ClickBank · Maxweb</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p7_0" aria-label="Ver campanha de Kinzeno">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p7_0" aria-label="Ver campanha de Kinzeno">
 <label for="p7_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Kinzeno <span class="lock">🔒 Exclusivo</span></h3><div class="plat">BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 75,00</b><span>comissão</span></div></div>
@@ -3509,8 +3503,7 @@ Afiliação: 1 clique + solicitar afiliação para Gerente da Plataforma — htt
       <div class="kpi"><b>5</b><span>BuyGoods · Maxweb · ClickBank · SmartAdv · GuruMedia</span></div>
     </div>
   </section>
-  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div>
-  <div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p8_0" aria-label="Ver campanha de Kinzeno">
+  <div class="sec-t"><h2>Produtos da semana</h2><span>Toque em um produto para ver a campanha completa</span></div><div class="grid"><div class="pc"><input type="checkbox" class="tg" id="p8_0" aria-label="Ver campanha de Kinzeno">
 <label for="p8_0" class="card">
   <div class="h"><div class="rank">1</div><div><h3>Kinzeno <span class="lock">🔒 Exclusivo</span></h3><div class="plat">BuyGoods · EUA</div></div>
     <div class="comm"><b>US$ 75,00</b><span>comissão</span></div></div>
