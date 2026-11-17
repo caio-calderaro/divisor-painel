@@ -10,13 +10,13 @@ VARIANTS = {
     'divisor': dict(
         eyb='Relatório Divisor nº {num} · Semana {date}',
         h1='{n} produtos validados para anunciar no Google esta semana',
-        lead='Mercado EUA. Cada produto já vem com palavra-chave, CPA e STOP definidos. Escolha, afilie-se e suba a campanha.',
+        lead='Mercados EUA e Europa. Cada produto já vem com palavra-chave, CPA e STOP definidos. Escolha, afilie-se e suba a campanha.',
         sec='Produtos da semana', per='Semana', per_l='semana', per_pl='Semanas',
         logo='Divisor', pill='Relatório semanal', on_brand='#06210f'),
     'pro': dict(
         eyb='Divisor PRO nº {num} · Quinzena de {date}',
         h1='{n} produtos validados para anunciar no Google nesta quinzena',
-        lead='Seleção exclusiva da Pós-Formação. Mercado EUA, com palavra-chave, CPA e STOP definidos em cada produto. Escolha, afilie-se e suba a campanha.',
+        lead='Seleção exclusiva da Pós-Formação. Mercados EUA e Europa, com palavra-chave, CPA e STOP definidos em cada produto. Escolha, afilie-se e suba a campanha.',
         sec='Produtos da quinzena', per='Quinzena', per_l='quinzena', per_pl='Quinzenas',
         logo='Divisor<em class="pro">PRO</em>', pill='Relatório quinzenal · Pós-Formação', on_brand='#1a1206'),
 }
@@ -118,6 +118,13 @@ def drawer(p, i, pid):
   </div>
 </div>'''
 
+def cat_info(c, k):
+    """Nome, ícone e classe de cor de cada parte do relatório."""
+    t = (c or '').lower()
+    if 'nutra' in t: return 'Produtos Nutracêuticos', '💊', 'c-nutra'
+    if 'commerce' in t or 'ecom' in t: return 'Produtos E-commerce', '🛒', 'c-ecom'
+    return (c or 'Outros produtos'), '📦', 'c-other' if k else 'c-ecom'
+
 def week_section(r, w):
     P = r['products']
     top = sorted(P, key=lambda p: -(p.get('commission_usd') or 0))[0]
@@ -148,15 +155,22 @@ def week_section(r, w):
 {drawer(p, ri, pid)}</div>''')
     hint = '<span>Toque em um produto para ver a campanha completa</span>'
     if len(cats) > 1 or cats[0]:
-        parts = []
+        # Divisão bem visível: atalhos grandes logo abaixo do topo + uma faixa colorida no começo de cada parte
+        jumps, parts = [], []
         for k, c in enumerate(cats):
             idx = [i for i, p in enumerate(P) if p.get('category') == c]
-            n = len(idx)
-            parts.append(f'<div class="sec-t cat"><h2><em>{k + 1}</em>{esc(c or "Outros")}</h2>'
-                         f'<span>{n} produto{"s" if n != 1 else ""}{" · toque em um produto para ver a campanha completa" if k == 0 else ""}</span></div>'
-                         f'<div class="grid">{"".join(cards[i] for i in idx)}</div>')
-        jump = ' · '.join(f'{esc(c or "Outros")} ({sum(1 for p in P if p.get("category") == c)})' for c in cats)
-        products_html = f'<div class="sec-t"><h2>{V["sec"]}</h2><span>{jump}</span></div>' + ''.join(parts)
+            n = len(idx); lbl, ico, cls = cat_info(c, k)
+            cid = f'cat{w}_{k}'
+            ctop = max((P[i].get('commission_usd') or 0) for i in idx)
+            jumps.append(f'<a class="catjump {cls}" href="#{cid}"><span class="ci">{ico}</span>'
+                         f'<span class="ct"><small>Parte {k + 1}</small><b>{esc(lbl)}</b>'
+                         f'<em>{n} produto{"s" if n != 1 else ""} · comissão até {usd(ctop)}</em></span><span class="ca">↓</span></a>')
+            parts.append(f'<section class="catsec {cls}" id="{cid}"><div class="catbar"><span class="ci">{ico}</span>'
+                         f'<div><small>Parte {k + 1} de {len(cats)}</small><h2>{esc(lbl)}</h2></div>'
+                         f'<span class="cn">{n} produto{"s" if n != 1 else ""}</span></div>'
+                         f'<div class="grid">{"".join(cards[i] for i in idx)}</div></section>')
+        products_html = (f'<div class="sec-t"><h2>{V["sec"]}</h2>{hint}</div>'
+                         f'<nav class="catjumps" aria-label="Partes do relatório">{"".join(jumps)}</nav>' + ''.join(parts))
     else:
         products_html = f'<div class="sec-t"><h2>{V["sec"]}</h2>{hint}</div><div class="grid">{"".join(cards)}</div>'
     return f'''<section class="week week{w}">

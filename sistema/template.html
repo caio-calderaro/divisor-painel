@@ -142,6 +142,28 @@ label.scrim{display:block}
 .disc{font-size:12px;color:var(--ink-3);text-align:center;padding:30px 0 10px}
 @media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr);padding-top:16px}.side{display:none}.chips{display:flex}.kpis{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.top .pill{display:none}.kpi b{font-size:18px}body{overflow-x:hidden}.wrap{padding:0 16px}.hero{padding:24px 20px}.dh,.db{padding-left:16px;padding-right:16px}.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* ---- partes do relatório (E-commerce / Nutracêuticos): divisão bem visível ---- */
+:root{--c-ecom:#2f6fd6;--c-nutra:#c27a1c;--c-other:#7c5cc4}
+:root[data-theme="dark"]{--c-ecom:#5ea2ff;--c-nutra:#f2a64a;--c-other:#a98bf0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-ecom:#5ea2ff;--c-nutra:#f2a64a;--c-other:#a98bf0}}
+.c-ecom{--cc:var(--c-ecom)}.c-nutra{--cc:var(--c-nutra)}.c-other{--cc:var(--c-other)}
+.catjumps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:0 0 8px}
+.catjump{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;text-decoration:none;color:var(--ink);background:color-mix(in srgb,var(--cc) 12%,var(--surface));border:1.5px solid color-mix(in srgb,var(--cc) 55%,transparent);box-shadow:var(--shadow)}
+.catjump:hover{background:color-mix(in srgb,var(--cc) 20%,var(--surface))}
+.catjump .ci,.catbar .ci{font-size:26px;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--cc) 22%,transparent);flex:none}
+.catjump .ct{display:flex;flex-direction:column;min-width:0}
+.catjump small,.catbar small{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--cc)}
+.catjump b{font-size:18px;letter-spacing:-.02em;line-height:1.2}
+.catjump em{font-style:normal;font-size:12.5px;color:var(--ink-2)}
+.catjump .ca{margin-left:auto;font-weight:800;color:var(--cc);font-size:18px}
+.catsec{margin-top:30px;scroll-margin-top:80px}
+.catbar{display:flex;align-items:center;gap:14px;padding:16px 20px;margin-bottom:16px;border-radius:16px;background:linear-gradient(90deg,color-mix(in srgb,var(--cc) 26%,var(--surface)),color-mix(in srgb,var(--cc) 6%,var(--surface)));border-left:6px solid var(--cc)}
+.catbar h2{font-size:clamp(20px,2.6vw,26px);letter-spacing:-.025em;line-height:1.15}
+.catbar .cn{margin-left:auto;font-weight:800;font-size:13px;padding:6px 12px;border-radius:999px;background:var(--cc);color:#0b0b0d;white-space:nowrap}
+.catsec .card{border-top:3px solid var(--cc)}
+.catsec .rank{background:color-mix(in srgb,var(--cc) 18%,transparent);color:var(--cc);border-color:color-mix(in srgb,var(--cc) 55%,transparent)}
+@media (max-width:520px){.catbar{padding:14px}.catbar .ci,.catjump .ci{width:40px;height:40px;font-size:22px}.catbar .cn{display:none}}
 /*__WEEK_CSS__*/
 </style>
 </head>
