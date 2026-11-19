@@ -119,13 +119,24 @@ button:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 <script src="conteudo/mes1.js"></script>
+<script src="conteudo/mes2.js"></script>
+<script src="conteudo/mes3.js"></script>
+<script src="conteudo/mes4.js"></script>
+<script src="conteudo/mes5.js"></script>
+<script src="conteudo/mes6.js"></script>
+<script src="conteudo/mes7.js"></script>
+<script src="conteudo/mes8.js"></script>
 <script>
 let D=[],M=[];
 const sb=supabase.createClient(window.CONFIG.SUPABASE_URL,window.CONFIG.SUPABASE_ANON_KEY);
 let S={inicio:null,r:{}},USER=null,URLS={},timer=null;
 const hojeSP=()=>new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
 function save(){clearTimeout(timer);timer=setTimeout(async()=>{const{error}=await sb.from('progresso').upsert({user_id:USER.id,inicio:S.inicio,estado:S.r,atualizado_em:new Date().toISOString()});if(error)toast('Não foi possível salvar. Confira sua internet.')},600)}
-const dia=()=>Math.min(D.length,Math.max(1,Math.round((new Date(hojeSP()+'T12:00')-new Date(S.inicio+'T12:00'))/864e5)+1));
+const dia=()=>Math.max(1,Math.round((new Date(hojeSP()+'T12:00')-new Date(S.inicio+'T12:00'))/864e5)+1);
+let ALL=[];
+function montarMeses(){const ms=[{n:1,tema:window.MES1.tema||'Acordar',dias:window.MES1.dias},...(window.MESES||[]).slice().sort((a,b)=>a.n-b.n)];ALL=[];ms.forEach(m=>m.dias.forEach((d,i)=>ALL.push({...d,mes:m.n,tema:m.tema,pos:i+1,len:m.dias.length})))}
+const info=g=>{const d=ALL[(g-1)%ALL.length];return{...d,volta:Math.floor((g-1)/ALL.length)+1,inicioMes:g-d.pos+1}};
+const rotulo=g=>{const x=info(g);return `Mês ${x.mes} · ${esc(x.tema)}${x.volta>1?' · Volta '+x.volta:''}`};
 const rec=n=>S.r[n]||(S.r[n]={});
 const fiz=n=>S.r[n]&&S.r[n].f==='fiz';
 function seq(){let s=0;for(let n=dia();n>=1;n--){if(fiz(n))s++;else if(n===dia()&&!S.r[n]?.f)continue;else break}return s}
@@ -198,10 +209,11 @@ function avisos(){
   return h;
 }
 /* telas */
-function track(){let h='';for(let n=1;n<=30;n++){const c=n>dia()?'':fiz(n)?'on':S.r[n]?.f==='nao'?'miss':'';h+=`<i class="${c} ${n===dia()?'now':''}" title="Dia ${n}"></i>`}return `<div class="track" aria-label="Dias do mês">${h}</div>`}
+function track(){const g=dia(),x=info(g);let h='';for(let k=1;k<=x.len;k++){const n=x.inicioMes+k-1;const c=n>g?'':fiz(n)?'on':S.r[n]?.f==='nao'?'miss':'';h+=`<i class="${c} ${n===g?'now':''}" title="Dia ${k}"></i>`}return `<div class="track" aria-label="Dias do mês">${h}</div>`}
 function hoje(){
   const n=dia(),d=D[n-1],r=rec(n);
-  let h=`<header class="top"><div><div class="eyebrow">Mês 1 · Acordar</div><h1>Dia ${n}</h1></div><div class="of">${n} de 30<br>${seq()} em sequência</div></header>${track()}`;
+  const x=info(n);
+  let h=`<header class="top"><div><div class="eyebrow">${rotulo(n)}</div><h1>Dia ${x.pos}</h1></div><div class="of">${x.pos} de ${x.len}<br>${seq()} em sequência</div></header>${track()}`;
   h+=avisos();
   h+=`<section class="card"><div class="step"><span class="eyebrow">Semente</span><span class="when">manhã</span></div><h2>${esc(d.t)}</h2>${player(n,'full')}<button class="short" data-short="${n}">Sem tempo? Ouça 1 minuto</button><p class="idea">${esc(d.ideia)}</p></section>`;
   h+=`<section class="card"><div class="step"><span class="eyebrow">Decisão do dia</span><span class="when">durante o dia</span></div><p class="gesto">${esc(d.gesto)}</p>${r.g?'<div class="done">Decisão assumida</div>':'<button class="btn" data-act="g">Assumo essa decisão</button>'}</section>`;
@@ -221,13 +233,13 @@ function agora(){
 }
 function placar(){
   const n=dia(),done=Object.keys(S.r).filter(k=>fiz(+k)).length;
-  let cal='';for(let i=1;i<=30;i++){const c=i>D.length?'soon':i>n?'':fiz(i)?'on':S.r[i]?.f==='nao'?'miss':'';cal+=`<div class="${c} ${i===n?'now':''}" title="Dia ${i}">${i}</div>`}
+  const x=info(n);let cal='';for(let k=1;k<=x.len;k++){const i=x.inicioMes+k-1;const c=i>n?'':fiz(i)?'on':S.r[i]?.f==='nao'?'miss':'';cal+=`<div class="${c} ${i===n?'now':''}" title="Dia ${k}">${k}</div>`}
   const ns=Object.keys(S.r).map(Number).sort((a,b)=>b-a).filter(k=>S.r[k].nota);
-  return `<header><div class="eyebrow">Placar · Mês 1 · Acordar</div></header>
-  <section class="stats"><div class="stat"><div class="big">${done}</div><span>dias acordado</span></div><div class="stat"><div class="big">${seq()}</div><span>em sequência</span></div><div class="stat"><div class="big">${n}</div><span>de 30 dias</span></div></section>
+  return `<header><div class="eyebrow">Placar · ${rotulo(n)}</div></header>
+  <section class="stats"><div class="stat"><div class="big">${done}</div><span>dias acordado</span></div><div class="stat"><div class="big">${seq()}</div><span>em sequência</span></div><div class="stat"><div class="big">${x.pos}</div><span>de ${x.len} dias no mês</span></div></section>
   <section class="card"><span class="eyebrow">Seu mês</span><div class="cal">${cal}</div><p class="muted" style="margin:0;font-size:14px">Dourado é dia acordado. Contorno vermelho é dia fechado sem cumprir a decisão.</p></section>
   ${n===7&&rec(7).closed?mirror():''}
-  <section class="card"><span class="eyebrow">Diário da mudança</span>${ns.length?'<div class="notes">'+ns.map(k=>`<div class="note"><b>Dia ${k}</b><p>${esc(S.r[k].nota)}</p></div>`).join('')+'</div>':'<p class="muted" style="margin:0">O que você escrever no fechamento de cada dia aparece aqui.</p>'}</section>
+  <section class="card"><span class="eyebrow">Diário da mudança</span>${ns.length?'<div class="notes">'+ns.map(k=>`<div class="note"><b>${info(k).volta>1||info(k).mes>1?'M'+info(k).mes+' · ':''}Dia ${info(k).pos}</b><p>${esc(S.r[k].nota)}</p></div>`).join('')+'</div>':'<p class="muted" style="margin:0">O que você escrever no fechamento de cada dia aparece aqui.</p>'}</section>
   <div class="demo"><span>${esc(USER.email)}</span><button data-act="sair">Sair</button></div>
   `;
 }
@@ -271,10 +283,11 @@ async function boot(){
   if(linkTipo&&!boot.senhaFeita){boot.senhaFeita=1;return telaSenha()}
   const{data:ativa}=await sb.rpc('assinatura_ativa');
   if(!ativa)return telaInativa();
-  D=window.MES1.dias;M=window.MES1.momentos;
+  montarMeses();M=window.MES1.momentos;
   const{data:p}=await sb.from('progresso').select('inicio,estado').eq('user_id',USER.id).maybeSingle();
   if(p){S.inicio=p.inicio;S.r=p.estado||{}}else{S.inicio=hojeSP();await sb.from('progresso').insert({user_id:USER.id,inicio:S.inicio})}
-  const ids=D.slice(0,dia()).map(d=>d.id+'.mp3');
+  D=Array.from({length:dia()},(_,i)=>ALL[i%ALL.length]);
+  const ids=[...new Set(D.map(d=>d.id+'.mp3'))];
   const{data:u}=await sb.storage.from('audios').createSignedUrls(ids,6*3600);
   (u||[]).forEach(x=>{if(x.signedUrl)URLS[parseInt(x.path)]=x.signedUrl});
   M=M.filter(([,n])=>n<=dia());
