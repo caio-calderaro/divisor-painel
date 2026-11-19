@@ -102,6 +102,11 @@ button:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible
 .link{justify-self:start;background:none;border:0;color:var(--seed);font:600 15px var(--body);padding:0;cursor:pointer;text-decoration:underline}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:9;max-width:calc(100% - 32px)}
 @media (prefers-reduced-motion:no-preference){.card,.mo{animation:in .35s ease both}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
+.aviso{background:var(--panel);border:1px solid var(--seed);border-radius:14px;padding:16px;display:grid;gap:10px}
+.aviso h3{margin:0;font:800 24px/1 var(--display);text-transform:uppercase;letter-spacing:.02em}
+.aviso ol{margin:0;padding-left:20px;display:grid;gap:4px}.aviso p{margin:0}
+.aviso .row{display:flex;gap:8px}.aviso .row .btn{flex:1}
+.aviso .x{background:none;border:0;color:var(--muted);font:500 14px var(--body);text-decoration:underline;cursor:pointer;justify-self:start;padding:0}
 </style>
 
 <div class="app" id="app"></div>
@@ -153,11 +158,51 @@ const player=(n,mode,cls='')=>`<div class="pl" data-n="${n}" data-mode="${mode}"
 // carrega durações para mostrar o tempo antes de tocar
 function preload(){D.forEach((d,i)=>{if(!URLS[d.id]||i+1>dia())return;const x=new Audio();x.preload='metadata';x.src=URLS[d.id];x.onloadedmetadata=()=>{durs[i+1]=x.duration;ui()}})}
 
+
+/* instalar na tela de início + lembretes */
+const VAPID='BPY_IkgV0-oPdW367YflO88FSGsGtyszbCX9rF5rop6zWc4FeJdF2mVmnpYysism10gFu6mQn3DhrcnVNnDfwhQ';
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(_){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}}};
+const instalado=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let PEDIDO=null,PUSH='na',REG=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();PEDIDO=e;if(D.length&&tab==='hoje')render()});
+addEventListener('appinstalled',()=>{ls.set('sd_inst','1');if(D.length)render()});
+async function prepararPush(){
+  if(!('serviceWorker' in navigator))return;
+  try{REG=await navigator.serviceWorker.register('sw.js')}catch(_){return}
+  if(!('PushManager' in window)||!('Notification' in window)){PUSH='na';return}
+  if(Notification.permission==='denied'){PUSH='negado';return}
+  const sub=await REG.pushManager.getSubscription();PUSH=sub?'on':'off';if(sub)salvarInscricao(sub)
+}
+const b64u=s=>{const p='='.repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(b,c=>c.charCodeAt(0))};
+async function salvarInscricao(sub){const j=sub.toJSON();await sb.from('push_inscricoes').upsert({endpoint:j.endpoint,user_id:USER.id,p256dh:j.keys.p256dh,auth:j.keys.auth})}
+async function ativarLembretes(){
+  try{
+    const ok=await Notification.requestPermission();
+    if(ok!=='granted'){PUSH='negado';render();return toast('Notificações bloqueadas. Libere nas configurações do celular.')}
+    const sub=await REG.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID)});
+    await salvarInscricao(sub);PUSH='on';render();toast('Lembretes ativados: manhã e noite.')
+  }catch(e){toast('Não foi possível ativar agora. Tente de novo.')}
+}
+function avisos(){
+  let h='';
+  if(!instalado()&&!ls.get('sd_inst_x')){
+    h+=`<section class="aviso"><span class="eyebrow">Deixe o app na sua tela</span><h3>Instale o Semente</h3>`;
+    if(PEDIDO)h+=`<p>Coloque o Semente na tela de início e abra com um toque, como qualquer aplicativo.</p><button class="btn" data-act="instalar">Instalar app</button>`;
+    else if(ios)h+=`<ol><li>No Safari, toque em <b>Compartilhar</b> (o quadrado com a seta para cima).</li><li>Role e toque em <b>Adicionar à Tela de Início</b>.</li><li>Toque em <b>Adicionar</b>. Depois abra pelo ícone da semente.</li></ol><p class="muted" style="font-size:14px">No iPhone, os lembretes só funcionam abrindo pelo ícone.</p>`;
+    else h+=`<ol><li>Toque no menu do navegador (<b>⋮</b>).</li><li>Toque em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</li><li>Abra pelo ícone da semente.</li></ol>`;
+    h+=`<button class="x" data-act="inst-x">Já instalei / agora não</button></section>`;
+  }
+  if(PUSH==='off')h+=`<section class="aviso"><span class="eyebrow">Lembretes</span><h3>Não perca nenhum dia</h3><p>Um aviso de manhã quando a semente chega e outro à noite para fechar o dia.</p><button class="btn" data-act="push">Ativar lembretes</button></section>`;
+  else if(PUSH==='na'&&ios&&!instalado()&&ls.get('sd_inst_x'))h+=`<p class="muted" style="margin:0;font-size:14px">Para receber lembretes no iPhone, abra o Semente pelo ícone da tela de início.</p>`;
+  return h;
+}
 /* telas */
 function track(){let h='';for(let n=1;n<=30;n++){const c=n>dia()?'':fiz(n)?'on':S.r[n]?.f==='nao'?'miss':'';h+=`<i class="${c} ${n===dia()?'now':''}" title="Dia ${n}"></i>`}return `<div class="track" aria-label="Dias do mês">${h}</div>`}
 function hoje(){
   const n=dia(),d=D[n-1],r=rec(n);
   let h=`<header class="top"><div><div class="eyebrow">Mês 1 · Acordar</div><h1>Dia ${n}</h1></div><div class="of">${n} de 30<br>${seq()} em sequência</div></header>${track()}`;
+  h+=avisos();
   h+=`<section class="card"><div class="step"><span class="eyebrow">Semente</span><span class="when">manhã</span></div><h2>${esc(d.t)}</h2>${player(n,'full')}<button class="short" data-short="${n}">Sem tempo? Ouça 1 minuto</button><p class="idea">${esc(d.ideia)}</p></section>`;
   h+=`<section class="card"><div class="step"><span class="eyebrow">Decisão do dia</span><span class="when">durante o dia</span></div><p class="gesto">${esc(d.gesto)}</p>${r.g?'<div class="done">Decisão assumida</div>':'<button class="btn" data-act="g">Assumo essa decisão</button>'}</section>`;
   h+=`<section class="card"><div class="step"><span class="eyebrow">Fechamento</span><span class="when">noite</span></div>`;
@@ -196,6 +241,9 @@ document.addEventListener('click',e=>{
   const f=e.target.closest('[data-f]');if(f){r.f=f.dataset.f;const t=document.getElementById('nota');if(t)r.nota=t.value;save();render();return}
   const a=e.target.closest('[data-act]');if(!a)return;
   const act=a.dataset.act;
+  if(act==='instalar'&&PEDIDO){PEDIDO.prompt();PEDIDO.userChoice.then(c=>{if(c.outcome==='accepted')ls.set('sd_inst','1');PEDIDO=null;render()});return}
+  if(act==='inst-x'){ls.set('sd_inst_x','1');render();return}
+  if(act==='push'){ativarLembretes();return}
   if(act==='g'){r.g=true;save();render()}
   else if(act==='close'){const t=document.getElementById('nota');r.nota=t?t.value.trim():'';r.closed=true;save();render()}
   else if(act==='reopen'){r.closed=false;save();render()}
@@ -230,6 +278,7 @@ async function boot(){
   const{data:u}=await sb.storage.from('audios').createSignedUrls(ids,6*3600);
   (u||[]).forEach(x=>{if(x.signedUrl)URLS[parseInt(x.path)]=x.signedUrl});
   M=M.filter(([,n])=>n<=dia());
+  await prepararPush();
   document.querySelector('.tabs').hidden=false;if(/access_token/.test(location.hash))history.replaceState(null,'','#hoje');render();preload();
 }
 boot();
